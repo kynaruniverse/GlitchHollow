@@ -6,7 +6,7 @@ import android.view.SurfaceHolder;
 public class GameThread extends Thread {
 
     private static final int TARGET_FPS = 60;
-    private static final long FRAME_TIME = 1000L / TARGET_FPS;
+    private static final double TICK_RATE = 1.0 / 60.0;
 
     private SurfaceHolder surfaceHolder;
     private GameView gameView;
@@ -25,7 +25,6 @@ public class GameThread extends Thread {
     public void run() {
         long lastTime = System.nanoTime();
         double accumulator = 0.0;
-        final double NS_PER_TICK = 1000000000.0 / 60.0; 
 
         while (running) {
             long now = System.nanoTime();
@@ -34,9 +33,10 @@ public class GameThread extends Thread {
             accumulator += passed;
 
             // Update physics/logic at fixed 60Hz interval
-            while (accumulator >= (1.0 / 60.0)) {
-                gameView.update(); 
-                accumulator -= (1.0 / 60.0);
+            while (accumulator >= TICK_RATE) {
+                // Pass current time to align with GameView's updated update(long) method
+                gameView.update(System.currentTimeMillis()); 
+                accumulator -= TICK_RATE;
             }
 
             // Draw as fast as possible
@@ -46,6 +46,8 @@ public class GameThread extends Thread {
                 if (canvas != null) {
                     gameView.draw(canvas);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             } finally {
                 if (canvas != null) {
                     try {

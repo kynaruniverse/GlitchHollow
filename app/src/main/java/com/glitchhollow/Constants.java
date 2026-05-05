@@ -30,8 +30,7 @@ public final class Constants {
     public static final float PLAYER_SPEED      = 5f;
     public static final float PLAYER_ACCEL      = 1.8f;
     public static final float FRICTION          = 0.78f;
-    public static final int GLITCH_DURATION     = 15; // default glitch length
-    public static final int HUD_HEIGHT          = 60;
+    public static final float ENEMY_SPEED       = 2.2f;
 
     // Player
     public static final int PLAYER_WIDTH    = 36;
@@ -45,8 +44,6 @@ public final class Constants {
 
     // Camera
     public static final float CAM_LERP     = 0.12f;
-    public static final float ENEMY_SPEED  = 2.2f;
-
 
     // Game states
     public static final int STATE_PLAYING   = 0;
@@ -59,10 +56,8 @@ public final class Constants {
     public static final int SWIPE_THRESHOLD = 40;  // px
     public static final long SWIPE_MAX_TIME = 300;  // ms
 
-    // HUD
-    public static final int HUD_HEIGHT      = 0; // drawn relative to screen, set dynamically
-    public static final int HUD_HEIGHT_DP   = 56; // design height in dp, resolved at runtime
-
-    // Glitch effect
+    // HUD and Effects
+    public static final int HUD_HEIGHT      = 60;
+    public static final int HUD_HEIGHT_DP   = 56;
     public static final int GLITCH_DURATION = 8;   // frames
 }
