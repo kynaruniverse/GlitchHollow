@@ -6,14 +6,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
+
+    private SaveManager saveManager;
+
+    private static final String[] WORLD_NAMES = {
+        "The Toon Lot",
+        "Plushy Purgatory",
+        "Signal Waste",
+        "The Finale Screen"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Full screen immersive
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -23,19 +32,56 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
-        // Play button → GameActivity (world 1, level 1 for now)
-        findViewById(R.id.btn_play).setOnClickListener(v -> {
-            Intent intent = new Intent(this, GameActivity.class);
-            intent.putExtra("world", 1);
-            intent.putExtra("level", 1);
-            startActivity(intent);
-        });
+        saveManager = new SaveManager(this);
+
+        setupUI();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         hideSystemUI();
+        // Refresh progress text each time we return from a level
+        updateProgressDisplay();
+    }
+
+    private void setupUI() {
+        // PLAY — resume from last save point
+        findViewById(R.id.btn_play).setOnClickListener(v -> {
+            int[] resume = saveManager.getResumePoint();
+            launchLevel(resume[0], resume[1]);
+        });
+
+        updateProgressDisplay();
+    }
+
+    private void updateProgressDisplay() {
+        int[] resume    = saveManager.getResumePoint();
+        int   world     = resume[0];
+        int   level     = resume[1];
+        int   stars     = saveManager.totalStars();
+        int   maxStars  = saveManager.maxStars();
+
+        // "World 1 · Level 3 — The Toon Lot"
+        String worldName = (world - 1 < WORLD_NAMES.length)
+                         ? WORLD_NAMES[world - 1] : "World " + world;
+        String progressLine = "World " + world + "  ·  Level " + level
+                            + "\n" + worldName;
+
+        String starsLine = "★ " + stars + " / " + maxStars;
+
+        TextView tvProgress = findViewById(R.id.tv_progress);
+        if (tvProgress != null) tvProgress.setText(progressLine);
+
+        TextView tvStars = findViewById(R.id.tv_stars);
+        if (tvStars != null) tvStars.setText(starsLine);
+    }
+
+    private void launchLevel(int world, int level) {
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("world", world);
+        intent.putExtra("level", level);
+        startActivity(intent);
     }
 
     private void hideSystemUI() {

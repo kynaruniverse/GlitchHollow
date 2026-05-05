@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     android:background="@color/glitch_bg">
 
-    <!-- Title -->
+    <!-- ── Title ──────────────────────────────────────────── -->
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="100dp"
         android:text="GLITCH HOLLOW"
         android:textColor="@color/glitch_cyan"
         android:textSize="36sp"
@@ -25,30 +25,80 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/tv_title"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:text="escape the signal"
         android:textColor="@color/glitch_purple"
         android:textSize="14sp"
         android:fontFamily="monospace" />
 
-    <!-- Play button -->
+    <!-- ── Progress card ──────────────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/card_progress"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tv_subtitle"
+        android:layout_marginTop="48dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/glitch_mid"
+        android:gravity="center">
+
+        <!-- "CONTINUE" label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONTINUE"
+            android:textColor="@color/glitch_purple"
+            android:textSize="11sp"
+            android:letterSpacing="0.25"
+            android:fontFamily="monospace" />
+
+        <!-- World / Level line — filled by MainActivity -->
+        <TextView
+            android:id="@+id/tv_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="World 1  ·  Level 1\nThe Toon Lot"
+            android:textColor="@color/glitch_cyan"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:gravity="center" />
+
+        <!-- Stars total -->
+        <TextView
+            android:id="@+id/tv_stars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="★ 0 / 72"
+            android:textColor="@color/glitch_yellow"
+            android:textSize="13sp"
+            android:fontFamily="monospace" />
+
+    </LinearLayout>
+
+    <!-- ── PLAY button ────────────────────────────────────── -->
     <TextView
         android:id="@+id/btn_play"
-        android:layout_width="200dp"
-        android:layout_height="56dp"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="80dp"
+        android:layout_width="220dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/card_progress"
+        android:layout_marginTop="32dp"
         android:gravity="center"
         android:text="▶  PLAY"
         android:textColor="@color/glitch_bg"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:fontFamily="monospace"
         android:background="@color/glitch_cyan"
         android:clickable="true"
         android:focusable="true" />
 
-    <!-- Version -->
+    <!-- ── Version footer ─────────────────────────────────── -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

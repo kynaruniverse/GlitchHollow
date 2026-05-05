@@ -1,6 +1,7 @@
 package com.glitchhollow;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -9,6 +10,7 @@ import android.view.WindowManager;
 public class GameActivity extends Activity {
 
     private GameView gameView;
+    private int world, level;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +23,8 @@ public class GameActivity extends Activity {
         );
         hideSystemUI();
 
-        int world = getIntent().getIntExtra("world", 1);
-        int level = getIntent().getIntExtra("level", 1);
+        world = getIntent().getIntExtra("world", 1);
+        level = getIntent().getIntExtra("level", 1);
 
         gameView = new GameView(this, world, level);
         setContentView(gameView);
@@ -48,6 +50,26 @@ public class GameActivity extends Activity {
         } else {
             if (gameView != null) gameView.togglePause();
         }
+    }
+
+    /**
+     * Called by GameView when the player taps "continue" on the win screen.
+     * Advances to the next level within this Activity (no visible transition gap).
+     */
+    public void advanceToNextLevel(int nextWorld, int nextLevel) {
+        if (gameView != null) {
+            gameView.loadLevel(nextWorld, nextLevel);
+            world = nextWorld;
+            level = nextLevel;
+        }
+    }
+
+    /**
+     * Called by GameView when there are no more levels (game complete).
+     * Returns to the main menu.
+     */
+    public void onGameComplete() {
+        finish();
     }
 
     private void hideSystemUI() {

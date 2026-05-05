@@ -8,29 +8,37 @@ import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
-    private GameThread  gameThread;
-    private GameEngine  engine;
-    private Renderer    renderer;
-    private Camera      camera;
-    private SpriteSheet sprites;
+    private GameThread   gameThread;
+    private GameEngine   engine;
+    private Renderer     renderer;
+    private Camera       camera;
+    private SpriteSheet  sprites;
     private InputHandler input;
+    private SaveManager  saveManager;
 
-    private boolean paused = false;
-    private int screenW, screenH;
+    private boolean paused   = false;
+    private int     screenW, screenH;
+
+    // Current world/level (may change on advance)
+    private int currentWorld, currentLevel;
 
     public GameView(Context context, int world, int level) {
         super(context);
         getHolder().addCallback(this);
         setFocusable(true);
 
-        sprites  = new SpriteSheet(context);
-        engine   = new GameEngine(context, world, level);
+        currentWorld = world;
+        currentLevel = level;
 
-        // Camera sized after surface created; pre-init with estimate
-        camera   = new Camera(1080, 1920);
-        renderer = new Renderer(sprites, camera);
-        input    = new InputHandler(engine.player);
+        sprites     = new SpriteSheet(context);
+        saveManager = new SaveManager(context);
+        engine      = new GameEngine(context, world, level);
+        camera      = new Camera(1080, 1920);
+        renderer    = new Renderer(sprites, camera);
+        input       = new InputHandler(engine.player);
     }
+
+    // ── Surface lifecycle ────────────────────────────────────────
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -48,19 +56,67 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder h, int f, int w, int h2) {
-        screenW = w; screenH = h2;
+        screenW = w;
+        screenH = h2;
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        stopThread();
+        sprites.recycle();
+    }
+
+    private void stopThread() {
+        if (gameThread == null) return;
         gameThread.setRunning(false);
         boolean retry = true;
         while (retry) {
-            try { gameThread.join(); retry = false; }
-            catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+            try {
+                gameThread.join();
+                retry = false;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
-        sprites.recycle();
+        gameThread = null;
     }
+
+    // ── Level loading (called by GameActivity on advance) ────────
+
+    /**
+     * Loads a new level into the existing GameView without recreating it.
+     * Called on the main thread by GameActivity after the game thread is
+     * briefly paused.
+     */
+    public void loadLevel(int world, int level) {
+        currentWorld = world;
+        currentLevel = level;
+
+        // Pause game thread while we swap engine state
+        boolean wasRunning = (gameThread != null);
+        stopThread();
+
+        engine = new GameEngine(getContext(), world, level);
+        input  = new InputHandler(engine.player);
+
+        // Reconfigure camera for new level dimensions
+        if (screenW > 0 && screenH > 0) {
+            camera = new Camera(screenW, screenH);
+            camera.setLevelSize(engine.tileMap.cols, engine.tileMap.rows);
+            renderer = new Renderer(sprites, camera);
+        }
+
+        paused = false;
+
+        // Restart game thread
+        if (wasRunning) {
+            gameThread = new GameThread(getHolder(), this);
+            gameThread.setRunning(true);
+            gameThread.start();
+        }
+    }
+
+    // ── Input ────────────────────────────────────────────────────
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -73,28 +129,61 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (event.getAction() != MotionEvent.ACTION_DOWN) return;
 
         switch (engine.gameState) {
+
             case Constants.STATE_PAUSED:
                 engine.gameState = Constants.STATE_PLAYING;
                 paused = false;
                 break;
+
             case Constants.STATE_DEAD:
                 engine.respawnAfterDeath();
                 break;
+
             case Constants.STATE_GAMEOVER:
                 engine.restart();
                 break;
+
             case Constants.STATE_WIN:
-                // Return to calling activity
-                if (getContext() instanceof GameActivity) {
-                    ((GameActivity) getContext()).finish();
-                }
+                handleWinTap();
                 break;
         }
     }
 
+    private void handleWinTap() {
+        // 1. Persist progress
+        saveManager.saveStars(currentWorld, currentLevel, engine.starsEarned);
+        saveManager.saveCoin(currentWorld, currentLevel, engine.coinGotThisRun);
+        saveManager.onLevelComplete(currentWorld, currentLevel);
+
+        // 2. Work out next level
+        int nextWorld = currentWorld;
+        int nextLevel = currentLevel + 1;
+
+        if (nextLevel > SaveManager.LEVELS_PER_WORLD) {
+            nextWorld++;
+            nextLevel = 1;
+        }
+
+        // 3. Check if we've finished the whole game
+        if (nextWorld > SaveManager.TOTAL_WORLDS) {
+            if (getContext() instanceof GameActivity) {
+                ((GameActivity) getContext()).onGameComplete();
+            }
+            return;
+        }
+
+        // 4. Advance
+        if (getContext() instanceof GameActivity) {
+            ((GameActivity) getContext()).advanceToNextLevel(nextWorld, nextLevel);
+        }
+    }
+
+    // ── Game loop ────────────────────────────────────────────────
+
     public void update() {
         if (paused || engine.gameState == Constants.STATE_PAUSED) return;
-        engine.update(16); // ~60fps fixed step
+
+        engine.update(16);
         camera.update(
             engine.player.x + Constants.PLAYER_WIDTH  / 2f,
             engine.player.y + Constants.PLAYER_HEIGHT / 2f
@@ -127,10 +216,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    public void resume()       { paused = false; }
-    public void pause()        { paused = true; }
-    public void togglePause()  { paused = !paused;
+    // ── Pause helpers ────────────────────────────────────────────
+
+    public void resume()      { paused = false; }
+    public void pause()       { paused = true; }
+    public void togglePause() {
+        paused = !paused;
         engine.gameState = paused
-            ? Constants.STATE_PAUSED : Constants.STATE_PLAYING; }
-    public boolean isPaused()  { return paused; }
+            ? Constants.STATE_PAUSED
+            : Constants.STATE_PLAYING;
+    }
+    public boolean isPaused() { return paused; }
 }
