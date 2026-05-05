@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Ink blob body -->
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M24,4 Q38,4 44,16 Q50,28 44,38 Q38,48 24,46 Q10,48 4,38 Q-2,28 4,16 Q10,4 24,4 Z" />
+
+    <!-- Ink drips -->
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M12,44 Q10,50 14,52 Q16,54 16,48 Z" />
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M24,46 Q23,52 26,53 Q28,54 27,48 Z" />
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M34,44 Q33,50 36,51 Q38,52 37,46 Z" />
+
+    <!-- Glowing eyes -->
+    <path
+        android:fillColor="#FF3CAC"
+        android:pathData="M16,18 Q16,14 20,14 Q24,14 24,18 Q24,22 20,22 Q16,22 16,18 Z" />
+    <path
+        android:fillColor="#FF3CAC"
+        android:pathData="M24,18 Q24,14 28,14 Q32,14 32,18 Q32,22 28,22 Q24,22 24,18 Z" />
+
+    <!-- Eye glow outer -->
+    <path
+        android:fillColor="#33FF3CAC"
+        android:pathData="M14,18 Q14,12 20,12 Q26,12 26,18 Q26,24 20,24 Q14,24 14,18 Z" />
+    <path
+        android:fillColor="#33FF3CAC"
+        android:pathData="M22,18 Q22,12 28,12 Q34,12 34,18 Q34,24 28,24 Q22,24 22,18 Z" />
+
+    <!-- Jagged mouth -->
+    <path
+        android:strokeColor="#FF3CAC"
+        android:strokeWidth="2"
+        android:fillColor="#00000000"
+        android:pathData="M14,32 L18,28 L22,32 L26,28 L30,32 L34,28" />
+
+</vector>

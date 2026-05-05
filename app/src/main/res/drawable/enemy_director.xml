@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <!-- Camera body -->
+    <path android:fillColor="#1A1A2E"
+        android:pathData="M8,20 L56,20 L56,52 Q56,56 52,56 L12,56 Q8,56 8,52 Z" />
+
+    <!-- Camera lens -->
+    <path android:fillColor="#0D0D1A"
+        android:pathData="M20,28 Q20,16 32,16 Q44,16 44,28 Q44,44 32,44 Q20,44 20,28 Z" />
+    <path android:fillColor="#1A1A2E"
+        android:pathData="M24,28 Q24,20 32,20 Q40,20 40,28 Q40,40 32,40 Q24,40 24,28 Z" />
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M27,28 Q27,23 32,23 Q37,23 37,28 Q37,37 32,37 Q27,37 27,28 Z" />
+    <path android:fillColor="#FF3CAC"
+        android:pathData="M30,28 Q30,26 32,26 Q34,26 34,28 Q34,32 32,32 Q30,32 30,28 Z" />
+
+    <!-- Recording light -->
+    <path android:fillColor="#FF2D55"
+        android:pathData="M50,22 Q50,18 54,18 Q58,18 58,22 Q58,26 54,26 Q50,26 50,22 Z" />
+
+    <!-- Teeth at bottom -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M12,52 L16,46 L20,52 L24,46 L28,52 L32,46 L36,52 L40,46 L44,52 L48,46 L52,52 Z" />
+
+    <!-- Film reel ears -->
+    <path android:fillColor="#444466"
+        android:pathData="M2,24 Q0,20 4,18 Q8,16 8,22 L8,32 Q8,36 4,34 Q0,32 2,28 Z" />
+    <path android:fillColor="#444466"
+        android:pathData="M62,24 Q64,20 60,18 Q56,16 56,22 L56,32 Q56,36 60,34 Q64,32 62,28 Z" />
+
+    <!-- Reel holes -->
+    <path android:fillColor="#1A1A2E"
+        android:pathData="M3,24 Q3,22 5,22 Q7,22 7,24 Q7,26 5,26 Q3,26 3,24 Z" />
+    <path android:fillColor="#1A1A2E"
+        android:pathData="M57,24 Q57,22 59,22 Q61,22 61,24 Q61,26 59,26 Q57,26 57,24 Z" />
+
+</vector>

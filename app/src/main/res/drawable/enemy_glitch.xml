@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="56dp"
+    android:viewportWidth="48"
+    android:viewportHeight="56">
+
+    <!-- Glitched body — pixelated look using rectangles -->
+    <path android:fillColor="#00F5FF"
+        android:pathData="M16,4 L32,4 L32,8 L16,8 Z" />
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M12,8 L36,8 L36,12 L12,12 Z" />
+    <path android:fillColor="#00F5FF"
+        android:pathData="M8,12 L40,12 L40,16 L8,16 Z" />
+    <path android:fillColor="#FF3CAC"
+        android:pathData="M8,16 L40,16 L40,20 L8,20 Z" />
+    <path android:fillColor="#00F5FF"
+        android:pathData="M8,20 L40,20 L40,24 L8,24 Z" />
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M8,24 L40,24 L40,28 L8,28 Z" />
+    <path android:fillColor="#00F5FF"
+        android:pathData="M8,28 L40,28 L40,32 L8,32 Z" />
+    <path android:fillColor="#FF3CAC"
+        android:pathData="M8,32 L40,32 L40,36 L8,36 Z" />
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M10,36 L38,36 L38,40 L10,40 Z" />
+    <path android:fillColor="#00F5FF"
+        android:pathData="M12,40 L36,40 L36,44 L12,44 Z" />
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M16,44 L32,44 L32,48 L16,48 Z" />
+
+    <!-- Glitch offset lines -->
+    <path android:fillColor="#33FFFFFF"
+        android:pathData="M8,18 L20,18 L20,20 L8,20 Z" />
+    <path android:fillColor="#33FFFFFF"
+        android:pathData="M28,26 L40,26 L40,28 L28,28 Z" />
+
+    <!-- Empty eyes -->
+    <path android:fillColor="#0D0D1A"
+        android:pathData="M14,14 L22,14 L22,20 L14,20 Z" />
+    <path android:fillColor="#0D0D1A"
+        android:pathData="M26,14 L34,14 L34,20 L26,20 Z" />
+
+    <!-- Eye glow -->
+    <path android:fillColor="#FF3CAC"
+        android:pathData="M16,15 L20,15 L20,19 L16,19 Z" />
+    <path android:fillColor="#FF3CAC"
+        android:pathData="M28,15 L32,15 L32,19 L28,19 Z" />
+
+</vector>

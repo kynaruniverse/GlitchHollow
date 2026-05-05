@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="64dp"
+    android:viewportWidth="48"
+    android:viewportHeight="64">
+
+    <!-- Body leaning forward -->
+    <path
+        android:fillColor="#FFE600"
+        android:pathData="M14,28 L13,52 Q13,56 17,56 L33,56 Q37,55 38,51 L38,28 Q37,24 25,22 Q13,24 14,28 Z" />
+
+    <!-- Hood -->
+    <path
+        android:fillColor="#FFE600"
+        android:pathData="M11,26 Q12,14 25,12 Q38,14 39,26 L38,28 Q37,24 25,22 Q13,24 14,28 Z" />
+
+    <!-- Head tilted -->
+    <path
+        android:fillColor="#FFCBA4"
+        android:pathData="M15,22 Q16,8 25,8 Q35,8 35,22 Q34,30 24,30 Q15,30 15,22 Z" />
+
+    <!-- Eyes determined squint -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M17,17 Q18,14 21,15 Q23,16 22,19 Q20,21 18,20 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M25,17 Q26,14 29,15 Q31,16 30,19 Q28,21 26,20 Z" />
+
+    <!-- Pupils -->
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M18.5,17 Q19.5,15.5 21,16.5 Q21.5,18 20,19 Q18.5,19 18.5,17 Z" />
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M26.5,17 Q27.5,15.5 29,16.5 Q29.5,18 28,19 Q26.5,19 26.5,17 Z" />
+
+    <!-- Mouth open run -->
+    <path
+        android:strokeColor="#8B4513"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:pathData="M21,26 Q24,29 27,26" />
+
+    <!-- Headband -->
+    <path
+        android:fillColor="#444466"
+        android:pathData="M15,14 L35,14 L35,16 L15,16 Z" />
+    <path
+        android:fillColor="#00F5FF"
+        android:pathData="M21,10 L29,10 L31,14 L19,14 Z" />
+
+    <!-- Arms pumping -->
+    <path
+        android:fillColor="#FFE600"
+        android:pathData="M14,30 L4,36 Q3,38 5,39 Q7,40 8,38 L16,34 Z" />
+    <path
+        android:fillColor="#FFE600"
+        android:pathData="M38,30 L44,44 Q45,46 43,47 Q41,47 40,45 L36,33 Z" />
+
+    <!-- Legs running -->
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M15,52 L10,62 Q10,64 14,64 Q16,64 17,62 L20,52 Z" />
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M30,52 L34,62 Q35,64 38,63 Q40,62 39,60 L34,52 Z" />
+
+</vector>

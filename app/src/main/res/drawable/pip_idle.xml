@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="64dp"
+    android:viewportWidth="48"
+    android:viewportHeight="64">
+
+    <!-- Yellow raincoat body -->
+    <path
+        android:fillColor="#FFE600"
+        android:pathData="M12,28 L12,52 Q12,56 16,56 L32,56 Q36,56 36,52 L36,28 Q36,24 24,22 Q12,24 12,28 Z" />
+
+    <!-- Raincoat hood -->
+    <path
+        android:fillColor="#FFE600"
+        android:pathData="M10,26 Q10,14 24,12 Q38,14 38,26 L36,28 Q36,24 24,22 Q12,24 12,28 Z" />
+
+    <!-- Head -->
+    <path
+        android:fillColor="#FFCBA4"
+        android:pathData="M14,22 Q14,8 24,8 Q34,8 34,22 Q34,30 24,30 Q14,30 14,22 Z" />
+
+    <!-- Left eye white -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M17,18 Q17,14 20,14 Q23,14 23,18 Q23,22 20,22 Q17,22 17,18 Z" />
+
+    <!-- Right eye white -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M25,18 Q25,14 28,14 Q31,14 31,18 Q31,22 28,22 Q25,22 25,18 Z" />
+
+    <!-- Left pupil -->
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M18.5,18 Q18.5,16 20,16 Q21.5,16 21.5,18 Q21.5,20 20,20 Q18.5,20 18.5,18 Z" />
+
+    <!-- Right pupil -->
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M26.5,18 Q26.5,16 28,16 Q29.5,16 29.5,18 Q29.5,20 28,20 Q26.5,20 26.5,18 Z" />
+
+    <!-- Eye shine left -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M19,16.5 Q19.5,16 20,16.5 Q19.5,17 19,16.5 Z" />
+
+    <!-- Eye shine right -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M27,16.5 Q27.5,16 28,16.5 Q27.5,17 27,16.5 Z" />
+
+    <!-- Mouth small smile -->
+    <path
+        android:strokeColor="#8B4513"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:pathData="M21,25 Q24,27 27,25" />
+
+    <!-- Headband torch -->
+    <path
+        android:fillColor="#444466"
+        android:pathData="M14,14 L34,14 L34,16 L14,16 Z" />
+
+    <!-- Torch light -->
+    <path
+        android:fillColor="#00F5FF"
+        android:pathData="M20,10 L28,10 L30,14 L18,14 Z" />
+
+    <!-- Torch glow -->
+    <path
+        android:fillColor="#3300F5FF"
+        android:pathData="M16,6 L32,6 L36,14 L12,14 Z" />
+
+    <!-- Left arm -->
+    <path
+        android:fillColor="#FFE600"
+        android:pathData="M12,30 L6,42 Q5,44 7,45 Q9,46 10,44 L14,34 Z" />
+
+    <!-- Right arm -->
+    <path
+        android:fillColor="#FFE600"
+        android:pathData="M36,30 L42,42 Q43,44 41,45 Q39,46 38,44 L34,34 Z" />
+
+    <!-- Left boot -->
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M14,52 L14,60 Q14,62 18,62 Q20,62 20,60 L20,52 Z" />
+
+    <!-- Right boot -->
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M28,52 L28,60 Q28,62 32,62 Q34,62 34,60 L34,52 Z" />
+
+</vector>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="24dp"
+    android:viewportWidth="96"
+    android:viewportHeight="24">
+
+    <!-- Platform base -->
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M0,4 Q0,0 6,0 L90,0 Q96,0 96,4 L96,20 Q96,24 90,24 L6,24 Q0,24 0,20 Z" />
+
+    <!-- Top shine -->
+    <path android:fillColor="#9B4FDE"
+        android:pathData="M4,2 L92,2 L92,6 L4,6 Z" />
+
+    <!-- Glitch stripes -->
+    <path android:fillColor="#33FF3CAC"
+        android:pathData="M16,0 L24,0 L24,24 L16,24 Z" />
+    <path android:fillColor="#33FF3CAC"
+        android:pathData="M48,0 L56,0 L56,24 L48,24 Z" />
+    <path android:fillColor="#33FF3CAC"
+        android:pathData="M72,0 L80,0 L80,24 L72,24 Z" />
+
+    <!-- Bottom glow -->
+    <path android:fillColor="#5500F5FF"
+        android:pathData="M8,20 L88,20 L88,24 L8,24 Z" />
+
+</vector>

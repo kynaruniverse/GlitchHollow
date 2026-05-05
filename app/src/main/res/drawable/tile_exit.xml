@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="64dp"
+    android:viewportWidth="48"
+    android:viewportHeight="64">
+
+    <!-- Gate frame -->
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M2,8 L2,64 L12,64 L12,8 Q12,2 7,2 Q2,2 2,8 Z" />
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M36,8 L36,64 L46,64 L46,8 Q46,2 41,2 Q36,2 36,8 Z" />
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M2,2 L46,2 L46,12 L2,12 Z" />
+
+    <!-- Gate arch -->
+    <path android:fillColor="#9B4FDE"
+        android:pathData="M12,12 Q12,4 24,4 Q36,4 36,12 Z" />
+
+    <!-- Portal inside -->
+    <path android:fillColor="#00F5FF"
+        android:pathData="M12,12 L36,12 L36,64 L12,64 Z" />
+
+    <!-- Portal swirl -->
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M24,20 Q32,24 32,36 Q32,48 24,52 Q16,48 16,36 Q16,24 24,20 Z" />
+    <path android:fillColor="#00F5FF"
+        android:pathData="M24,26 Q29,30 29,36 Q29,42 24,46 Q19,42 19,36 Q19,30 24,26 Z" />
+
+    <!-- Arrow pointing in -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M20,34 L24,28 L28,34 L26,34 L26,44 L22,44 L22,34 Z" />
+
+    <!-- Frame glow -->
+    <path android:strokeColor="#00F5FF"
+        android:strokeWidth="1"
+        android:fillColor="#00000000"
+        android:pathData="M2,8 Q2,2 7,2 L41,2 Q46,2 46,8 L46,64 L2,64 Z" />
+
+</vector>
