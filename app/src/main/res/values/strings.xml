@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Glitch Hollow</string>
+    <string name="play">PLAY</string>
+    <string name="worlds">WORLDS</string>
+    <string name="back">BACK</string>
+    <string name="retry">RETRY</string>
+    <string name="menu">MENU</string>
+    <string name="next">NEXT</string>
+    <string name="paused">PAUSED</string>
+    <string name="game_over">GAME OVER</string>
+    <string name="level_complete">LEVEL CLEAR</string>
+    <string name="collecting">Signal Shards</string>
+    <string name="world_1">The Toon Lot</string>
+    <string name="world_2">Plushy Purgatory</string>
+    <string name="world_3">Signal Waste</string>
+    <string name="world_4">The Finale Screen</string>
+</resources>

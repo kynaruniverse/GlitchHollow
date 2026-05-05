@@ -1,0 +1,12 @@
+{
+  "world": 1,
+  "level": 1,
+  "name": "Static Awakening",
+  "rows": 12,
+  "cols": 20,
+  "tiles": [],
+  "player_start": {"x": 1, "y": 10},
+  "shards": [],
+  "enemies": [],
+  "exit": {"x": 18, "y": 10}
+}
