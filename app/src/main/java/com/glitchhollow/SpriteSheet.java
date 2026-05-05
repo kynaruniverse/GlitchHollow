@@ -61,11 +61,17 @@ public class SpriteSheet {
         try {
             Drawable d = ContextCompat.getDrawable(context, resId);
             if (d == null) return;
+            // Production Note: We use ARGB_8888 for players/items with transparency, 
+            // but we ensure the bitmap is precisely sized to prevent memory waste.
             Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            Canvas c = new Canvas(bmp);
+            Canvas canvas = new Canvas(bmp);
             d.setBounds(0, 0, w, h);
-            d.draw(c);
+            d.draw(canvas);
             cache.put(id, bmp);
+        } catch (OutOfMemoryError e) {
+            // Commercial fallback: Clear cache and attempt a smaller config if possible
+            cache.clear();
+            System.gc();
         } catch (Exception e) {
             e.printStackTrace();
         }

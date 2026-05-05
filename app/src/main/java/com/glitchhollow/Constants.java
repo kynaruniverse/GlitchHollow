@@ -28,7 +28,10 @@ public final class Constants {
     public static final float MAX_FALL_SPEED    = 18f;
     public static final float JUMP_FORCE        = -14f;
     public static final float PLAYER_SPEED      = 5f;
+    public static final float PLAYER_ACCEL      = 1.8f;
     public static final float FRICTION          = 0.78f;
+    public static final int GLITCH_DURATION     = 15; // default glitch length
+    public static final int HUD_HEIGHT          = 60;
 
     // Player
     public static final int PLAYER_WIDTH    = 36;
@@ -42,6 +45,8 @@ public final class Constants {
 
     // Camera
     public static final float CAM_LERP     = 0.12f;
+    public static final float ENEMY_SPEED  = 2.2f;
+
 
     // Game states
     public static final int STATE_PLAYING   = 0;

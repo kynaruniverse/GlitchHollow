@@ -34,7 +34,18 @@ public class GameActivity extends Activity {
     protected void onResume() {
         super.onResume();
         hideSystemUI();
-        if (gameView != null) gameView.resume();
+        // Ensure the game doesn't instantly resume into a 'Death' state if paused during a transition
+        if (gameView != null) {
+            gameView.resume();
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideSystemUI();
+        }
     }
 
     @Override

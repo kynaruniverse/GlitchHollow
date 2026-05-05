@@ -10,7 +10,7 @@ public class Enemy {
     public boolean dead = false;
 
     private float patrolLeft, patrolRight;
-    private static final float SPEED = 2.2f;
+    private float speed = Constants.ENEMY_SPEED;
 
     public Enemy(int type, float startX, float startY, float patrolRange) {
         this.type = type;
@@ -18,7 +18,7 @@ public class Enemy {
         this.y = startY;
         patrolLeft  = startX;
         patrolRight = startX + patrolRange;
-        velX = SPEED;
+        velX = speed;
 
         // Size by type
         switch (type) {
@@ -40,11 +40,11 @@ public class Enemy {
         // Patrol bounce
         if (x <= patrolLeft) {
             x = patrolLeft;
-            velX = SPEED;
+            velX = speed;
             movingLeft = false;
         } else if (x + width >= patrolRight) {
             x = patrolRight - width;
-            velX = -SPEED;
+            velX = -speed;
             movingLeft = true;
         }
 
@@ -53,7 +53,7 @@ public class Enemy {
         int botRow   = (int)((y + height + 2) / ts);
         int centerCol = (int)((x + width / 2f) / ts);
         if (!map.isSolid(centerCol, botRow)) {
-            y += 4; // fall
+            y += Constants.GRAVITY * 8; // standardized fall
         } else {
             y = botRow * ts - height;
         }

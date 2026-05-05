@@ -51,6 +51,17 @@ public class InputHandler {
                 swipeActive    = true;
                 break;
 
+            case MotionEvent.ACTION_MOVE:
+                for (int i = 0; i < event.getPointerCount(); i++) {
+                    int id = event.getPointerId(i);
+                    float[] p = pointers.get(id);
+                    if (p != null) {
+                        p[0] = event.getX(i);
+                        p[1] = event.getY(i);
+                    }
+                }
+                break;
+
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 pointers.remove(pointerId);

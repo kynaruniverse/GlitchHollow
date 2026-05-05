@@ -19,11 +19,10 @@ public class LevelLoader {
         String filename = "levels/w" + world + "_l" + level + ".json";
         try {
             InputStream is = context.getAssets().open(filename);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
+            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+            String json = s.hasNext() ? s.next() : "";
             is.close();
-            String json = new String(buffer, StandardCharsets.UTF_8);
+            if (json.isEmpty()) throw new Exception("Empty level file");
             return parse(json);
         } catch (Exception e) {
             e.printStackTrace();

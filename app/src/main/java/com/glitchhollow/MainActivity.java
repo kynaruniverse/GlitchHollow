@@ -12,12 +12,14 @@ public class MainActivity extends Activity {
 
     private SaveManager saveManager;
 
-    private static final String[] WORLD_NAMES = {
-        "The Toon Lot",
-        "Plushy Purgatory",
-        "Signal Waste",
-        "The Finale Screen"
-    };
+        private String[] getWorldNames() {
+        return new String[] {
+            getString(R.string.world_1),
+            getString(R.string.world_2),
+            getString(R.string.world_3),
+            getString(R.string.world_4)
+        };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,15 @@ public class MainActivity extends Activity {
         updateProgressDisplay();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideSystemUI();
+        }
+    }
+
+
     private void setupUI() {
         // PLAY — resume from last save point
         findViewById(R.id.btn_play).setOnClickListener(v -> {
@@ -63,8 +74,9 @@ public class MainActivity extends Activity {
         int   maxStars  = saveManager.maxStars();
 
         // "World 1 · Level 3 — The Toon Lot"
-        String worldName = (world - 1 < WORLD_NAMES.length)
-                         ? WORLD_NAMES[world - 1] : "World " + world;
+        String[] names = getWorldNames();
+        String worldName = (world - 1 < names.length)
+                         ? names[world - 1] : "World " + world;
         String progressLine = "World " + world + "  ·  Level " + level
                             + "\n" + worldName;
 

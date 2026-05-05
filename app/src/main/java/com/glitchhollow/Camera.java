@@ -32,8 +32,10 @@ public class Camera {
         targetY = Math.max(0, Math.min(targetY, levelPixelHeight - screenHeight + hudH));
 
         // Smooth follow
+        // With the 60Hz fixed timestep, CAM_LERP is now a stable ratio.
         x += (targetX - x) * Constants.CAM_LERP;
         y += (targetY - y) * Constants.CAM_LERP;
+
 
         // Shake
         if (shakeFrames > 0) {

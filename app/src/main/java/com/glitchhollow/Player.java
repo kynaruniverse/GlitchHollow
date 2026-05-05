@@ -23,10 +23,10 @@ public class Player {
     public void update(TileMap map) {
         // Horizontal input
         if (wantsLeft) {
-            velX -= 1.8f;
+            velX -= Constants.PLAYER_ACCEL;
             facingLeft = true;
         } else if (wantsRight) {
-            velX += 1.8f;
+            velX += Constants.PLAYER_ACCEL;
             facingLeft = false;
         } else {
             velX *= Constants.FRICTION;

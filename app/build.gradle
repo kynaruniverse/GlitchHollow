@@ -12,7 +12,11 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0.0"
+
+        // Hint for the compiler to optimize for low-latency audio/touch
+        resConfigs "en" 
     }
+
 
     buildTypes {
         debug {

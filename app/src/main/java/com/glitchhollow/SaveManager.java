@@ -125,7 +125,9 @@ public class SaveManager {
         }
         int existing = getStars(world, level);
         int merged   = existing | newBits; // keep best
-        prefs.edit().putInt(starKey(world, level), merged).apply();
+        // Using commit() instead of apply() to ensure stars are written 
+        // to storage immediately before the level transition occurs.
+        prefs.edit().putInt(starKey(world, level), merged).commit();
     }
 
     private String starKey(int world, int level) {

@@ -14,10 +14,9 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="sensor"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustNothing"
-            android:immersive="true">
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,10 +27,9 @@
         <activity
             android:name=".GameActivity"
             android:exported="false"
-            android:screenOrientation="sensor"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustNothing"
-            android:immersive="true" />
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:windowSoftInputMode="adjustNothing" />
 
     </application>
 

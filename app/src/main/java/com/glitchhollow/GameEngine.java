@@ -37,6 +37,7 @@ public class GameEngine {
     private float spawnX, spawnY;
 
     private LevelLoader loader;
+    private final Rect2D collisionCache = new Rect2D(0, 0, 0, 0);
 
     public GameEngine(Context context, int world, int level) {
         this.context = context;
@@ -135,8 +136,9 @@ public class GameEngine {
         Rect2D pRect = player.getRect();
         for (int i = 0; i < shardX.length; i++) {
             if (shardCollected[i]) continue;
-            Rect2D sRect = new Rect2D(shardX[i], shardY[i], 32, 40);
-            if (pRect.intersects(sRect)) {
+            collisionCache.set(shardX[i], shardY[i], 32, 40);
+            if (pRect.intersects(collisionCache)) {
+
                 shardCollected[i] = true;
                 glitchFrames = Constants.GLITCH_DURATION;
             }
@@ -147,8 +149,8 @@ public class GameEngine {
         Rect2D pRect = player.getRect();
         for (int i = 0; i < coinX.length; i++) {
             if (coinCollected[i]) continue;
-            Rect2D cRect = new Rect2D(coinX[i], coinY[i], 28, 28);
-            if (pRect.intersects(cRect)) {
+            collisionCache.set(shardX[i], shardY[i], 28, 28);
+            if (pRect.intersects(collisionCache)) {
                 coinCollected[i] = true;
                 coinGotThisRun   = true;
             }
@@ -161,8 +163,8 @@ public class GameEngine {
 
         for (Enemy e : enemies) {
             if (e.dead) continue;
-            Rect2D eRect = new Rect2D(e.x, e.y, e.width, e.height);
-            if (!pRect.intersects(eRect)) continue;
+            collisionCache.set(e.x, e.y, e.width, e.height);
+            if (!pRect.intersects(collisionCache)) continue;
 
             // Stomp detection: player falling + player bottom near enemy top
             boolean stomp = player.velY > 2f

@@ -183,7 +183,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         if (paused || engine.gameState == Constants.STATE_PAUSED) return;
 
-        engine.update(16);
+        // Note: engine.update() is fixed-timestep; 
+        // deltaTime is handled by the GameThread accumulator.
+        engine.update();
+
         camera.update(
             engine.player.x + Constants.PLAYER_WIDTH  / 2f,
             engine.player.y + Constants.PLAYER_HEIGHT / 2f

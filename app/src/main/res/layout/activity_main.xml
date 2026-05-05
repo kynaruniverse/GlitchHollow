@@ -34,7 +34,8 @@
     <!-- ── Progress card ──────────────────────────────────── -->
     <LinearLayout
         android:id="@+id/card_progress"
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="48dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/tv_subtitle"
@@ -83,7 +84,8 @@
     <!-- ── PLAY button ────────────────────────────────────── -->
     <TextView
         android:id="@+id/btn_play"
-        android:layout_width="220dp"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="64dp"
         android:layout_height="60dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/card_progress"

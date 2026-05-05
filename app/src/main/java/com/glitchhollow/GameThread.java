@@ -23,39 +23,34 @@ public class GameThread extends Thread {
 
     @Override
     public void run() {
-        long startTime;
-        long elapsed;
-        long sleepTime;
+        long lastTime = System.nanoTime();
+        double accumulator = 0.0;
+        final double NS_PER_TICK = 1000000000.0 / 60.0; 
 
         while (running) {
-            startTime = System.currentTimeMillis();
-            Canvas canvas = null;
+            long now = System.nanoTime();
+            double passed = (now - lastTime) / 1000000000.0;
+            lastTime = now;
+            accumulator += passed;
 
+            // Update physics/logic at fixed 60Hz interval
+            while (accumulator >= (1.0 / 60.0)) {
+                gameView.update(); 
+                accumulator -= (1.0 / 60.0);
+            }
+
+            // Draw as fast as possible
+            Canvas canvas = null;
             try {
                 canvas = surfaceHolder.lockCanvas();
-                synchronized (surfaceHolder) {
-                    if (canvas != null) {
-                        gameView.update();
-                        gameView.draw(canvas);
-                    }
+                if (canvas != null) {
+                    gameView.draw(canvas);
                 }
             } finally {
                 if (canvas != null) {
                     try {
                         surfaceHolder.unlockCanvasAndPost(canvas);
-                    } catch (Exception e) {
-                        // surface was destroyed
-                    }
-                }
-            }
-
-            elapsed = System.currentTimeMillis() - startTime;
-            sleepTime = FRAME_TIME - elapsed;
-            if (sleepTime > 0) {
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+                    } catch (Exception e) {}
                 }
             }
         }
