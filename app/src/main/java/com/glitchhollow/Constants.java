@@ -55,7 +55,8 @@ public final class Constants {
     public static final long SWIPE_MAX_TIME = 300;  // ms
 
     // HUD
-    public static final int HUD_HEIGHT      = 72;
+    public static final int HUD_HEIGHT      = 0; // drawn relative to screen, set dynamically
+    public static final int HUD_HEIGHT_DP   = 56; // design height in dp, resolved at runtime
 
     // Glitch effect
     public static final int GLITCH_DURATION = 8;   // frames
