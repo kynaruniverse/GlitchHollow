@@ -30,7 +30,7 @@
         android:pathData="M25,30 L47,30 L47,42 L25,42 Z" />
 
     <!-- Purple mortar glow -->
-    <path android:strokeColor="#33007B2FBE"
+    <path android:strokeColor="#337B2FBE"
         android:strokeWidth="0.5"
         android:fillColor="#00000000"
         android:pathData="M0,15 L48,15 M0,29 L48,29 M0,43 L48,43 M12,0 L12,15 M24,0 L24,15 M36,0 L36,15" />
