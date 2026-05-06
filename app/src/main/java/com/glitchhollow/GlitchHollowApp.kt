@@ -23,9 +23,24 @@ class GlitchHollowApp : Activity() {
         setContentView(glView)
     }
 
-    override fun onResume()  { super.onResume();  glView.onResume();  hideSystemUI() }
-    override fun onPause()   { super.onPause();   glView.onPause() }
-    override fun onDestroy() { super.onDestroy(); ScreenManager.dispose() }
+    override fun onResume() {
+        super.onResume()
+        glView.onResume()
+        glView.renderer.onResume()
+        hideSystemUI()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        glView.renderer.onPause()
+        glView.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        glView.renderer.dispose()
+        ScreenManager.dispose()
+    }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)

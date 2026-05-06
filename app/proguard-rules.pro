@@ -1,32 +1,43 @@
-# 1. Performance: Allow shrinking but protect the core game loop
--optimizationpasses 5
--allowaccessmodification
--repackageclasses ''
+# ── Kotlin ────────────────────────────────────────────────────────
+-keep class kotlin.** { *; }
+-keep class kotlin.Metadata { *; }
+-dontwarn kotlin.**
+-keepclassmembers class **$WhenMappings { <fields>; }
+-keepclassmembers class kotlin.Lazy { *; }
 
-# 2. Level Loading Protection (JSON Reflection)
-# This keeps the fields in LevelData and EnemyData exactly as named 
-# so the JSON parser can find them.
--keepclassmembers class com.glitchhollow.LevelData { *; }
--keepclassmembers class com.glitchhollow.LevelData$EnemyData { *; }
+# ── Android OpenGL ────────────────────────────────────────────────
+# GL classes are loaded by name at runtime — must not be renamed
+-keep class android.opengl.** { *; }
+-keep class javax.microedition.khronos.** { *; }
 
-# 3. Android Hardware & UI Safety
--keep public class * extends android.app.Activity
--keep public class * extends android.view.View {
-    public <init>(android.content.Context);
-    public <init>(android.content.Context, android.util.AttributeSet);
-    public <init>(android.content.Context, android.util.AttributeSet, int);
-    public void set*(...);
+# ── Our GL renderer (GLSurfaceView.Renderer) ─────────────────────
+-keep class com.glitchhollow.gl.GLRenderer { *; }
+-keep class com.glitchhollow.gl.GLGameView { *; }
+
+# ── Game core ─────────────────────────────────────────────────────
+-keep class com.glitchhollow.core.** { *; }
+
+# ── Screen system ─────────────────────────────────────────────────
+-keep interface com.glitchhollow.screen.Screen { *; }
+-keep class com.glitchhollow.screen.** { *; }
+
+# ── JSON parsing (org.json built-in — no rules needed) ────────────
+
+# ── MediaPlayer + SoundPool ───────────────────────────────────────
+-keep class android.media.** { *; }
+
+# ── SharedPreferences ─────────────────────────────────────────────
+-keepclassmembers class * {
+    @android.content.SharedPreferences *;
 }
 
-# 4. Remove Log Messages in Release
-# This makes the game faster by removing the overhead of Log.d calls
+# ── Remove logging in release ─────────────────────────────────────
 -assumenosideeffects class android.util.Log {
     public static int d(...);
     public static int v(...);
     public static int i(...);
 }
 
-# 5. Metadata for Crash Reporting
--keepattributes *Annotation*
--keepattributes Signature
--keepattributes SourceFile,LineNumberTable
+# ── Suppress common warnings ──────────────────────────────────────
+-dontwarn java.lang.invoke.**
+-dontwarn **$$serializer

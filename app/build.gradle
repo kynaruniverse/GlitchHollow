@@ -16,6 +16,16 @@ android {
         resConfigs "en"
     }
 
+    signingConfigs {
+        release {
+            // Values injected by GitHub Actions secrets — never hardcode here
+            storeFile     file(System.getenv("KEYSTORE_PATH") ?: "debug.keystore")
+            storePassword System.getenv("KEYSTORE_PASSWORD") ?: ""
+            keyAlias      System.getenv("KEY_ALIAS")         ?: ""
+            keyPassword   System.getenv("KEY_PASSWORD")      ?: ""
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -25,7 +35,9 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                          'proguard-rules.pro'
         }
     }
 
@@ -34,14 +46,10 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '17'
-    }
+    kotlinOptions { jvmTarget = '17' }
 
     sourceSets {
-        main {
-            assets.srcDirs = ['src/main/assets']
-        }
+        main { assets.srcDirs = ['src/main/assets'] }
     }
 }
 
