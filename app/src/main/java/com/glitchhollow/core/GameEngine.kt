@@ -5,7 +5,7 @@ import java.util.LinkedList
 
 class GameEngine(context: Context, val world: Int, val level: Int) {
 
-    val player:    Player
+    lateinit var player: Player
     lateinit var tileMap:   TileMap
     val enemies:   MutableList<Enemy> = mutableListOf()
     var levelName: String = ""
