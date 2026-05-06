@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -10,13 +11,10 @@ android {
         applicationId "com.glitchhollow"
         minSdk 21
         targetSdk 34
-        versionCode 1
-        versionName "1.0.0"
-
-        // Hint for the compiler to optimize for low-latency audio/touch
-        resConfigs "en" 
+        versionCode 2
+        versionName "2.0.0"
+        resConfigs "en"
     }
-
 
     buildTypes {
         debug {
@@ -36,15 +34,13 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
     sourceSets {
         main {
             assets.srcDirs = ['src/main/assets']
-        }
-    }
-
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
 }
