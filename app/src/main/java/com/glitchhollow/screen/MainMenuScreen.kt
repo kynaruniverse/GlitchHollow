@@ -7,19 +7,20 @@ import com.glitchhollow.core.SaveManager
 import com.glitchhollow.core.SoundEvent
 import com.glitchhollow.gl.AssetManager
 import com.glitchhollow.gl.AudioManager
-import com.glitchhollow.gl.BitmapFont
+import com.glitchhollow.gl.GLRenderer
 import com.glitchhollow.gl.ParallaxBackground
 import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
 
 class MainMenuScreen(
-    private val context: Context,
-    private val assets:  AssetManager,
-    private val audio:   AudioManager,
-    private val batch:   SpriteBatch,
-    private val screenW: Int,
-    private val screenH: Int
+    private val context:  Context,
+    private val assets:   AssetManager,
+    private val audio:    AudioManager,
+    private val batch:    SpriteBatch,
+    private val screenW:  Int,
+    private val screenH:  Int,
+    private val renderer: GLRenderer? = null
 ) : Screen {
 
     private val sw = screenW.toFloat()
@@ -30,9 +31,9 @@ class MainMenuScreen(
     private val transition = ScreenTransition()
     private val save       = SaveManager(context)
 
-    private val btnW  = sw * 0.7f
-    private val btnH  = 72f
-    private val btnX  = (sw - btnW) / 2f
+    private val btnW   = sw * 0.7f
+    private val btnH   = 72f
+    private val btnX   = (sw - btnW) / 2f
     private val titleY = sh * 0.22f
     private val btn1Y  = sh * 0.50f
     private val btn2Y  = btn1Y + btnH + 20f
@@ -94,8 +95,10 @@ class MainMenuScreen(
         UIHelpers.button(batch, atlas, font, btnX, btn3Y, btnW, btnH, "PROFILE")
         UIHelpers.button(batch, atlas, font, btnX, btn4Y, btnW, btnH, "SETTINGS")
 
-        val total = save.totalStars(); val max = save.maxStars()
-        font.draw(batch, "STARS  $total / $max", sw / 2f, sh - 60f,
+        val total = save.totalStars()
+        val max   = save.maxStars()
+        font.draw(batch, "STARS  $total / $max",
+            sw / 2f, sh - 60f,
             1f, UIHelpers.YELLOW[0], UIHelpers.YELLOW[1], UIHelpers.YELLOW[2],
             0.8f, align = 0)
 
@@ -116,7 +119,11 @@ class MainMenuScreen(
                 val pt = save.getResumePoint()
                 transition.start {
                     ScreenManager.set(
-                        GameScreen(context, assets, audio, batch, pt[0], pt[1], screenW, screenH)
+                        GameScreen(
+                            context, assets, audio, batch,
+                            pt[0], pt[1], screenW, screenH,
+                            renderer = renderer
+                        )
                     )
                 }
             }
@@ -124,7 +131,11 @@ class MainMenuScreen(
                 audio.play(SoundEvent.MENU_SELECT)
                 transition.start {
                     ScreenManager.set(
-                        WorldSelectScreen(context, assets, audio, batch, screenW, screenH)
+                        WorldSelectScreen(
+                            context, assets, audio, batch,
+                            screenW, screenH,
+                            renderer = renderer
+                        )
                     )
                 }
             }
@@ -132,7 +143,11 @@ class MainMenuScreen(
                 audio.play(SoundEvent.MENU_SELECT)
                 transition.start {
                     ScreenManager.set(
-                        ProfileScreen(context, assets, audio, batch, screenW, screenH)
+                        ProfileScreen(
+                            context, assets, audio, batch,
+                            screenW, screenH,
+                            renderer = renderer
+                        )
                     )
                 }
             }
@@ -140,7 +155,11 @@ class MainMenuScreen(
                 audio.play(SoundEvent.MENU_SELECT)
                 transition.start {
                     ScreenManager.set(
-                        SettingsScreen(context, assets, audio, batch, screenW, screenH)
+                        SettingsScreen(
+                            context, assets, audio, batch,
+                            screenW, screenH,
+                            renderer = renderer
+                        )
                     )
                 }
             }

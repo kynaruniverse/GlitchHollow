@@ -5,6 +5,7 @@ import android.view.MotionEvent
 import com.glitchhollow.core.SoundEvent
 import com.glitchhollow.gl.AssetManager
 import com.glitchhollow.gl.AudioManager
+import com.glitchhollow.gl.GLRenderer
 import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
@@ -16,7 +17,8 @@ class PauseScreen(
     private val batch:      SpriteBatch,
     private val screenW:    Int,
     private val screenH:    Int,
-    private val gameScreen: GameScreen
+    private val gameScreen: GameScreen,
+    private val renderer:   GLRenderer? = null
 ) : Screen {
 
     private val sw = screenW.toFloat()
@@ -29,17 +31,19 @@ class PauseScreen(
     private val panelX  = (sw - panelW) / 2f
     private val panelY  = (sh - panelH) / 2f
 
-    private val btnW    = panelW * 0.8f
-    private val btnH    = 64f
-    private val btnX    = panelX + (panelW - btnW) / 2f
+    private val btnW     = panelW * 0.8f
+    private val btnH     = 64f
+    private val btnX     = panelX + (panelW - btnW) / 2f
     private val resumeY  = panelY + panelH * 0.28f
     private val restartY = resumeY + btnH + 18f
     private val menuY    = restartY + btnH + 18f
 
-    override fun update(dt: Float) { tx.update(dt) }
+    override fun update(dt: Float) {
+        tx.update(dt)
+    }
 
     override fun render() {
-        // Render paused game behind
+        // Render the paused game behind the panel
         gameScreen.render()
 
         val atlas = assets.atlas ?: return
@@ -67,7 +71,7 @@ class PauseScreen(
         if (action != MotionEvent.ACTION_DOWN || tx.isRunning) return
 
         when {
-            UIHelpers.hits(x, y, btnX, resumeY, btnW, btnH) -> {
+            UIHelpers.hits(x, y, btnX, resumeY,  btnW, btnH) -> {
                 audio.play(SoundEvent.MENU_SELECT)
                 ScreenManager.set(gameScreen)
             }
@@ -80,7 +84,11 @@ class PauseScreen(
                 audio.play(SoundEvent.MENU_BACK)
                 tx.start {
                     ScreenManager.set(
-                        MainMenuScreen(context, assets, audio, batch, screenW, screenH)
+                        MainMenuScreen(
+                            context, assets, audio, batch,
+                            screenW, screenH,
+                            renderer = renderer
+                        )
                     )
                 }
             }

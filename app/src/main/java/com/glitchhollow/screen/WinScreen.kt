@@ -7,6 +7,7 @@ import com.glitchhollow.core.SaveManager
 import com.glitchhollow.core.SoundEvent
 import com.glitchhollow.gl.AssetManager
 import com.glitchhollow.gl.AudioManager
+import com.glitchhollow.gl.GLRenderer
 import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
@@ -18,7 +19,8 @@ class WinScreen(
     private val batch:    SpriteBatch,
     private val screenW:  Int,
     private val screenH:  Int,
-    private val engine:   GameEngine
+    private val engine:   GameEngine,
+    private val renderer: GLRenderer? = null
 ) : Screen {
 
     private val sw = screenW.toFloat()
@@ -115,7 +117,7 @@ class WinScreen(
     override fun onTouch(x: Float, y: Float, action: Int) {
         if (action != MotionEvent.ACTION_DOWN || tx.isRunning) return
 
-        // Tap before all stars revealed — skip animation
+        // Skip animation on early tap
         if (time < STAR_DELAY * 4) {
             time = STAR_DELAY * 5f
             return
@@ -135,11 +137,19 @@ class WinScreen(
             tx.start {
                 if (nw > SaveManager.TOTAL_WORLDS) {
                     ScreenManager.set(
-                        MainMenuScreen(context, assets, audio, batch, screenW, screenH)
+                        MainMenuScreen(
+                            context, assets, audio, batch,
+                            screenW, screenH,
+                            renderer = renderer
+                        )
                     )
                 } else {
                     ScreenManager.set(
-                        GameScreen(context, assets, audio, batch, nw, nl, screenW, screenH)
+                        GameScreen(
+                            context, assets, audio, batch,
+                            nw, nl, screenW, screenH,
+                            renderer = renderer
+                        )
                     )
                 }
             }

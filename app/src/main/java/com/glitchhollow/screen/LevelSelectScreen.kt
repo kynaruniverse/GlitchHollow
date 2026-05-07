@@ -7,19 +7,21 @@ import com.glitchhollow.core.SaveManager
 import com.glitchhollow.core.SoundEvent
 import com.glitchhollow.gl.AssetManager
 import com.glitchhollow.gl.AudioManager
+import com.glitchhollow.gl.GLRenderer
 import com.glitchhollow.gl.ParallaxBackground
 import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
 
 class LevelSelectScreen(
-    private val context: Context,
-    private val assets:  AssetManager,
-    private val audio:   AudioManager,
-    private val batch:   SpriteBatch,
-    private val screenW: Int,
-    private val screenH: Int,
-    private val world:   Int
+    private val context:  Context,
+    private val assets:   AssetManager,
+    private val audio:    AudioManager,
+    private val batch:    SpriteBatch,
+    private val screenW:  Int,
+    private val screenH:  Int,
+    private val world:    Int,
+    private val renderer: GLRenderer? = null
 ) : Screen {
 
     private val sw = screenW.toFloat()
@@ -31,10 +33,10 @@ class LevelSelectScreen(
 
     private val LEVELS = SaveManager.LEVELS_PER_WORLD
 
-    private val cardW  = sw * 0.85f
-    private val cardH  = sh * 0.105f
-    private val cardX  = (sw - cardW) / 2f
-    private val firstY = sh * 0.22f
+    private val cardW   = sw * 0.85f
+    private val cardH   = sh * 0.105f
+    private val cardX   = (sw - cardW) / 2f
+    private val firstY  = sh * 0.22f
     private val cardGap = sh * 0.015f
 
     private val worldNames = arrayOf(
@@ -113,7 +115,11 @@ class LevelSelectScreen(
                 audio.play(SoundEvent.MENU_SELECT)
                 tx.start {
                     ScreenManager.set(
-                        GameScreen(context, assets, audio, batch, world, l, screenW, screenH)
+                        GameScreen(
+                            context, assets, audio, batch,
+                            world, l, screenW, screenH,
+                            renderer = renderer
+                        )
                     )
                 }
                 return
@@ -124,7 +130,11 @@ class LevelSelectScreen(
             audio.play(SoundEvent.MENU_BACK)
             tx.start {
                 ScreenManager.set(
-                    WorldSelectScreen(context, assets, audio, batch, screenW, screenH)
+                    WorldSelectScreen(
+                        context, assets, audio, batch,
+                        screenW, screenH,
+                        renderer = renderer
+                    )
                 )
             }
         }

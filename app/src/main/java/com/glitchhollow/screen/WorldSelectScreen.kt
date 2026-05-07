@@ -7,18 +7,20 @@ import com.glitchhollow.core.SaveManager
 import com.glitchhollow.core.SoundEvent
 import com.glitchhollow.gl.AssetManager
 import com.glitchhollow.gl.AudioManager
+import com.glitchhollow.gl.GLRenderer
 import com.glitchhollow.gl.ParallaxBackground
 import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
 
 class WorldSelectScreen(
-    private val context: Context,
-    private val assets:  AssetManager,
-    private val audio:   AudioManager,
-    private val batch:   SpriteBatch,
-    private val screenW: Int,
-    private val screenH: Int
+    private val context:  Context,
+    private val assets:   AssetManager,
+    private val audio:    AudioManager,
+    private val batch:    SpriteBatch,
+    private val screenW:  Int,
+    private val screenH:  Int,
+    private val renderer: GLRenderer? = null
 ) : Screen {
 
     private val sw = screenW.toFloat()
@@ -87,7 +89,8 @@ class WorldSelectScreen(
             UIHelpers.rectOutline(batch, atlas,
                 r[0], r[1], r[2], r[3], 3f, fill, 0.85f * pulse, border, pulse)
 
-            font.draw(batch, "W$w", r[0] + 16f, r[1] + 14f,
+            font.draw(batch, "W$w",
+                r[0] + 16f, r[1] + 14f,
                 3f, border[0], border[1], border[2], if (locked) 0.4f else 1f)
 
             font.draw(batch, worldNames[w - 1],
@@ -124,7 +127,11 @@ class WorldSelectScreen(
                 audio.play(SoundEvent.MENU_SELECT)
                 tx.start {
                     ScreenManager.set(
-                        LevelSelectScreen(context, assets, audio, batch, screenW, screenH, w)
+                        LevelSelectScreen(
+                            context, assets, audio, batch,
+                            screenW, screenH, w,
+                            renderer = renderer
+                        )
                     )
                 }
                 return
@@ -135,7 +142,11 @@ class WorldSelectScreen(
             audio.play(SoundEvent.MENU_BACK)
             tx.start {
                 ScreenManager.set(
-                    MainMenuScreen(context, assets, audio, batch, screenW, screenH)
+                    MainMenuScreen(
+                        context, assets, audio, batch,
+                        screenW, screenH,
+                        renderer = renderer
+                    )
                 )
             }
         }

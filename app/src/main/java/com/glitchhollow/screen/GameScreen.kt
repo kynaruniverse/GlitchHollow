@@ -13,6 +13,8 @@ import com.glitchhollow.gl.AssetManager
 import com.glitchhollow.gl.AudioManager
 import com.glitchhollow.gl.BackgroundArt
 import com.glitchhollow.gl.Camera2D
+import com.glitchhollow.gl.DebugOverlay
+import com.glitchhollow.gl.GLRenderer
 import com.glitchhollow.gl.GlowRenderer
 import com.glitchhollow.gl.HUD
 import com.glitchhollow.gl.ParticleSystem
@@ -30,11 +32,12 @@ class GameScreen(
     val world:            Int,
     val level:            Int,
     private val screenW:  Int,
-    private val screenH:  Int
+    private val screenH:  Int,
+    private val renderer: GLRenderer? = null
 ) : Screen {
 
-    val engine          = GameEngine(context, world, level)
-    private val camera  = Camera2D(screenW, screenH)
+    val engine               = GameEngine(context, world, level)
+    private val camera       = Camera2D(screenW, screenH)
     private val controls     = VirtualControls(engine.player)
     private val hud          = HUD()
     private val saveManager  = SaveManager(context)
@@ -42,15 +45,16 @@ class GameScreen(
     private val particles    = ParticleSystem()
     private val glowRenderer = GlowRenderer(context)
     private val bgArt        = BackgroundArt(screenW.toFloat(), screenH.toFloat(), world - 1)
+    private val debugOverlay = DebugOverlay(context)
 
     private val settings: SharedPreferences =
         context.getSharedPreferences("gh_settings", Context.MODE_PRIVATE)
 
     // Event tracking for particle + shake triggers
-    private var prevShardCount  = 0
-    private var prevCoinCount   = 0
-    private var prevGameState   = Constants.STATE_PLAYING
-    private var prevEnemyCount  = 0
+    private var prevShardCount = 0
+    private var prevCoinCount  = 0
+    private var prevGameState  = Constants.STATE_PLAYING
+    private var prevEnemyCount = 0
 
     // Pause button region
     private val pauseBtnX = screenW * 0.82f
@@ -76,11 +80,12 @@ class GameScreen(
     // ── Update ────────────────────────────────────────────────────
 
     override fun update(dt: Float) {
+        // dt is always exactly FIXED_STEP (0.01667s) from GLRenderer
         transition.update(dt)
         glowRenderer.update(dt)
 
         if (engine.gameState == Constants.STATE_PLAYING) {
-            engine.update((dt * 1000).toLong())
+            engine.update((dt * 1000f).toLong())
             camera.update(
                 engine.player.x + Constants.PLAYER_WIDTH  / 2f,
                 engine.player.y + Constants.PLAYER_HEIGHT / 2f
@@ -91,7 +96,7 @@ class GameScreen(
             spawnExitParticles()
         }
 
-        // Drain sound queue — always, even when paused for win SFX
+        // Drain sound queue every tick — including win/death frames
         audio.drainQueue(engine.soundQueue)
     }
 
@@ -195,12 +200,27 @@ class GameScreen(
         if (engine.gameState == Constants.STATE_WIN && !transition.isRunning) {
             transition.start {
                 ScreenManager.set(
-                    WinScreen(context, assets, audio, batch, screenW, screenH, engine)
+                    WinScreen(
+                        context, assets, audio, batch,
+                        screenW, screenH, engine,
+                        renderer = renderer
+                    )
                 )
             }
         }
 
         transition.draw(batch, assets, screenW.toFloat(), screenH.toFloat(), hudMatrix)
+
+        // Debug overlay — always last, on top of everything
+        if (renderer != null) {
+            debugOverlay.draw(
+                batch, assets, renderer, engine,
+                particles.liveCount,
+                camera.x, camera.y,
+                screenW.toFloat(), screenH.toFloat(),
+                hudMatrix
+            )
+        }
     }
 
     private fun drawGlowPass() {
@@ -209,7 +229,6 @@ class GameScreen(
 
         glowRenderer.beginPass(camera.matrix)
 
-        // Shard glow
         engine.shardX.indices.forEach { i ->
             if (engine.shardCollected[i]) return@forEach
             if (!camera.isVisible(engine.shardX[i], engine.shardY[i], 32f, 40f)) return@forEach
@@ -222,7 +241,6 @@ class GameScreen(
                 reg?.u1 ?: 0.001f, reg?.v1 ?: 0.001f)
         }
 
-        // Coin glow
         engine.coinX.indices.forEach { i ->
             if (engine.coinCollected[i]) return@forEach
             if (!camera.isVisible(engine.coinX[i], engine.coinY[i], 28f, 28f)) return@forEach
@@ -235,7 +253,6 @@ class GameScreen(
                 reg?.u1 ?: 0.001f, reg?.v1 ?: 0.001f)
         }
 
-        // Exit glow — only when all shards collected
         if (engine.allShardsCollected()) {
             val ts = Constants.TILE_SIZE.toFloat()
             for (row in 0 until engine.tileMap.rows) {
@@ -248,7 +265,6 @@ class GameScreen(
             }
         }
 
-        // Player glow — subtle edge light
         if (engine.player.invincible == 0) {
             glowRenderer.drawGlow(atlas,
                 engine.player.x, engine.player.y,
@@ -262,13 +278,23 @@ class GameScreen(
     // ── Touch ─────────────────────────────────────────────────────
 
     override fun onTouch(x: Float, y: Float, action: Int) {
+        // 3-finger tap toggles debug overlay
+        if (action == MotionEvent.ACTION_POINTER_DOWN) {
+            debugOverlay.toggle()
+            return
+        }
+
         if (action == MotionEvent.ACTION_DOWN) {
             // Pause button
             if (UIHelpers.hits(x, y, pauseBtnX, pauseBtnY, pauseBtnW, pauseBtnH) &&
                 engine.gameState == Constants.STATE_PLAYING) {
                 audio.play(SoundEvent.MENU_SELECT)
                 ScreenManager.set(
-                    PauseScreen(context, assets, audio, batch, screenW, screenH, this)
+                    PauseScreen(
+                        context, assets, audio, batch,
+                        screenW, screenH, this,
+                        renderer = renderer
+                    )
                 )
                 return
             }
@@ -278,6 +304,7 @@ class GameScreen(
                 Constants.STATE_GAMEOVER -> engine.restart()
             }
         }
+
         if (engine.gameState == Constants.STATE_PLAYING) {
             controls.onTouch(x, y, action)
         }
