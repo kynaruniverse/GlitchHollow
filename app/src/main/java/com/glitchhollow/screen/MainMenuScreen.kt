@@ -124,8 +124,7 @@ class MainMenuScreen(
                     ScreenManager.set(
                         GameScreen(
                             context, assets, audio, batch,
-                            pt[0], pt[1], screenW, screenH,
-                            renderer = renderer
+                            pt[0], pt[1], screenW, screenH
                         )
                     )
                 }
@@ -136,8 +135,7 @@ class MainMenuScreen(
                     ScreenManager.set(
                         WorldSelectScreen(
                             context, assets, audio, batch,
-                            screenW, screenH,
-                            renderer = renderer
+                            screenW, screenH
                         )
                     )
                 }
@@ -148,8 +146,7 @@ class MainMenuScreen(
                     ScreenManager.set(
                         ProfileScreen(
                             context, assets, audio, batch,
-                            screenW, screenH,
-                            renderer = renderer
+                            screenW, screenH
                         )
                     )
                 }
@@ -160,8 +157,7 @@ class MainMenuScreen(
                     ScreenManager.set(
                         SettingsScreen(
                             context, assets, audio, batch,
-                            screenW, screenH,
-                            renderer = renderer
+                            screenW, screenH
                         )
                     )
                 }

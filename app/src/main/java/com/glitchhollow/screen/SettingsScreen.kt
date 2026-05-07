@@ -14,6 +14,7 @@ import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.Texture
 import com.glitchhollow.gl.UIHelpers
+import com.glitchhollow.gl.Camera2D
 
 class SettingsScreen(
     private val context: Context,

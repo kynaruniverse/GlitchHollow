@@ -11,6 +11,7 @@ import com.glitchhollow.gl.ParallaxBackground
 import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
+import com.glitchhollow.gl.Camera2D
 
 class ProfileScreen(
     private val context: Context,

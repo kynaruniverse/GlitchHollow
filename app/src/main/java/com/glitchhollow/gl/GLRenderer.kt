@@ -125,7 +125,7 @@ class GLRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         // Scanlines + vignette — absolute last pass
         if (Constants.SCANLINE_ALPHA > 0f) {
-            val hm = buildHudMatrix(screenWidth.toFloat(), screenHeight.toFloat())
+            val hm = Camera2D(screenWidth, screenHeight).buildHudMatrix()
             scanlines.draw(
                 batch, assets,
                 screenWidth.toFloat(), screenHeight.toFloat(),

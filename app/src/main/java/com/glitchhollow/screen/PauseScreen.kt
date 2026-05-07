@@ -9,6 +9,7 @@ import com.glitchhollow.gl.GLRenderer
 import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
+import com.glitchhollow.gl.Camera2D
 
 class PauseScreen(
     private val context:    Context,

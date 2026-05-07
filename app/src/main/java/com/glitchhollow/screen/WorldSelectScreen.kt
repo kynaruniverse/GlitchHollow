@@ -12,6 +12,7 @@ import com.glitchhollow.gl.ParallaxBackground
 import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
+import com.glitchhollow.gl.Camera2D
 
 class WorldSelectScreen(
     private val context: Context,
@@ -31,8 +32,6 @@ class WorldSelectScreen(
     private val hm get() = camera.buildHudMatrix()
 
     private val bg = ParallaxBackground(sw, sh, 0)
-    private val tx = ScreenTransition()
-    private val save = SaveManager(context)
     private val tx = ScreenTransition()
     private val save = SaveManager(context)
 
@@ -135,8 +134,7 @@ class WorldSelectScreen(
                     ScreenManager.set(
                         LevelSelectScreen(
                             context, assets, audio, batch,
-                            screenW, screenH, w,
-                            renderer = renderer
+                            screenW, screenH, w
                         )
                     )
                 }
