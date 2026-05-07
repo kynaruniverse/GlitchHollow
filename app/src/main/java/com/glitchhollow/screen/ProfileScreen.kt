@@ -18,12 +18,14 @@ class ProfileScreen(
     private val audio:   AudioManager,
     private val batch:   SpriteBatch,
     private val screenW: Int,
-    private val screenH: Int
+    private val screenH: Int,
 ) : Screen {
 
     private val sw = screenW.toFloat()
     private val sh = screenH.toFloat()
-    private val hm = buildHudMatrix(sw, sh)
+
+    private val camera = Camera2D(screenW, screenH)
+    private val hm = camera.buildHudMatrix()
     private val bg = ParallaxBackground(sw, sh, 1)
     private val tx = ScreenTransition()
     private val save = SaveManager(context)

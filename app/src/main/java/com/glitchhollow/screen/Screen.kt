@@ -3,10 +3,10 @@ package com.glitchhollow.screen
 /**
  * Every full-screen game state implements this interface.
  *
- * update(dt) — advance logic. dt = delta time in seconds since last frame.
- * render()   — draw everything. Called on the GL thread.
- * dispose()  — release any resources (textures, buffers) when screen is removed.
- * onTouch()  — forward touch events from the Activity.
+ * Threading model:
+ * - update() runs on game loop thread
+ * - render() runs on OpenGL (GLSurfaceView) thread
+ * - onTouch() runs on Android UI thread
  */
 interface Screen {
     fun update(dt: Float)

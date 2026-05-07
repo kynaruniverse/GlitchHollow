@@ -14,19 +14,25 @@ import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
 
 class WorldSelectScreen(
-    private val context:  Context,
-    private val assets:   AssetManager,
-    private val audio:    AudioManager,
-    private val batch:    SpriteBatch,
-    private val screenW:  Int,
-    private val screenH:  Int,
+    private val context: Context,
+    private val assets: AssetManager,
+    private val audio: AudioManager,
+    private val batch: SpriteBatch,
+    private val screenW: Int,
+    private val screenH: Int,
     private val renderer: GLRenderer? = null
 ) : Screen {
 
+    private val camera = Camera2D(screenW, screenH)
+
     private val sw = screenW.toFloat()
     private val sh = screenH.toFloat()
-    private val hm = buildHudMatrix(sw, sh)
+
+    private val hm get() = camera.buildHudMatrix()
+
     private val bg = ParallaxBackground(sw, sh, 0)
+    private val tx = ScreenTransition()
+    private val save = SaveManager(context)
     private val tx = ScreenTransition()
     private val save = SaveManager(context)
 

@@ -45,8 +45,8 @@ class Camera2D(var screenWidth: Int, var screenHeight: Int) {
     }
 
     fun update(playerCX: Float, playerCY: Float) {
-        val hudH = Constants.HUD_HEIGHT.toFloat()
-
+        val hudH = Constants.HUD_HEIGHT.toFloat().coerceAtLeast(0f)
+        
         // Centre player on screen below HUD
         targetX = playerCX - screenWidth  / 2f
         targetY = playerCY - (screenHeight - hudH) / 2f - hudH
@@ -122,19 +122,28 @@ class Camera2D(var screenWidth: Int, var screenHeight: Int) {
     }
 
     /** HUD matrix — no camera scroll, origin at screen top-left */
+    private val hudMatrix = FloatArray(16)
+
     fun buildHudMatrix(): FloatArray {
-        val m = FloatArray(16)
-        val left   = 0f;  val right  = screenWidth.toFloat()
-        val top    = 0f;  val bottom = screenHeight.toFloat()
-        val near   = -1f; val far    = 1f
-        val rml = right - left;  val tmb = top - bottom;  val fmn = far - near
-        m[ 0] =  2f/rml; m[ 1]=0f;       m[ 2]=0f;        m[ 3]=0f
-        m[ 4] =  0f;      m[ 5]=2f/tmb;  m[ 6]=0f;        m[ 7]=0f
-        m[ 8] =  0f;      m[ 9]=0f;      m[10]=-2f/fmn;   m[11]=0f
-        m[12] = -(right+left)/rml
-        m[13] = -(top+bottom)/tmb
-        m[14] = -(far+near)/fmn
-        m[15] = 1f
-        return m
+        val left   = 0f
+        val right  = screenWidth.toFloat()
+        val top    = 0f
+        val bottom = screenHeight.toFloat()
+        val near   = -1f
+        val far    = 1f
+    
+        val rml = right - left
+        val tmb = top - bottom
+        val fmn = far - near
+    
+        hudMatrix[0] =  2f/rml; hudMatrix[1]=0f;      hudMatrix[2]=0f;      hudMatrix[3]=0f
+        hudMatrix[4] =  0f;     hudMatrix[5]=2f/tmb;  hudMatrix[6]=0f;      hudMatrix[7]=0f
+        hudMatrix[8] =  0f;     hudMatrix[9]=0f;      hudMatrix[10]=-2f/fmn;hudMatrix[11]=0f
+        hudMatrix[12]= -(right+left)/rml
+        hudMatrix[13]= -(top+bottom)/tmb
+        hudMatrix[14]= -(far+near)/fmn
+        hudMatrix[15]= 1f
+    
+        return hudMatrix
     }
 }

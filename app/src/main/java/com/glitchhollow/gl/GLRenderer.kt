@@ -12,10 +12,15 @@ import javax.microedition.khronos.opengles.GL10
 
 class GLRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
-    lateinit var batch:  SpriteBatch    private set
-    lateinit var assets: AssetManager  private set
-    lateinit var audio:  AudioManager  private set
+    lateinit var batch: SpriteBatch
+    private set
 
+    lateinit var assets: AssetManager
+    private set
+
+    lateinit var audio: AudioManager
+    private set
+    
     private lateinit var shader:    ShaderProgram
     private lateinit var scanlines: ScanlineRenderer
 
@@ -144,17 +149,5 @@ class GLRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     fun dispose() {
         audio.dispose()
-    }
-
-    // ── Helpers ───────────────────────────────────────────────────
-
-    fun buildHudMatrix(w: Float, h: Float): FloatArray {
-        val m = FloatArray(16)
-        val rml = w; val tmb = -h
-        m[ 0] =  2f/rml; m[ 4]=0f;      m[ 8]=0f;   m[12]=-1f
-        m[ 1] =  0f;      m[ 5]=2f/tmb; m[ 9]=0f;   m[13]=1f
-        m[ 2] =  0f;      m[ 6]=0f;     m[10]=-1f;  m[14]=0f
-        m[ 3] =  0f;      m[ 7]=0f;     m[11]=0f;   m[15]=1f
-        return m
     }
 }

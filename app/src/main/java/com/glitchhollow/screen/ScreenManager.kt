@@ -1,17 +1,5 @@
 package com.glitchhollow.screen
 
-/**
- * Manages which Screen is currently active.
- *
- * Usage:
- *   ScreenManager.set(MainMenuScreen(...))   // replace current screen
- *   ScreenManager.current?.update(dt)
- *   ScreenManager.current?.render()
- *
- * Thread note: set() is called from the UI thread (touch events, Activity lifecycle).
- * update() and render() are called from the GL thread.
- * @Volatile ensures the GL thread always sees the latest screen reference.
- */
 object ScreenManager {
 
     @Volatile
@@ -19,11 +7,17 @@ object ScreenManager {
         private set
 
     fun set(screen: Screen) {
-        current?.dispose()
+        val old = current
         current = screen
+        old?.dispose()
     }
 
     fun dispose() {
+        current?.dispose()
+        current = null
+    }
+
+    fun reset() {
         current?.dispose()
         current = null
     }

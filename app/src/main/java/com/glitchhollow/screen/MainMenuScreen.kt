@@ -12,6 +12,7 @@ import com.glitchhollow.gl.ParallaxBackground
 import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
+import com.glitchhollow.gl.Camera2D
 
 class MainMenuScreen(
     private val context:  Context,
@@ -25,7 +26,9 @@ class MainMenuScreen(
 
     private val sw = screenW.toFloat()
     private val sh = screenH.toFloat()
-    private val hm = buildHudMatrix(sw, sh)
+
+    private val camera = Camera2D(screenW, screenH)
+    private val hm = camera.buildHudMatrix()
 
     private val bg         = ParallaxBackground(sw, sh, worldIndex = 0)
     private val transition = ScreenTransition()

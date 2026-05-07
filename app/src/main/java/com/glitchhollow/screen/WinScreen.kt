@@ -11,6 +11,7 @@ import com.glitchhollow.gl.GLRenderer
 import com.glitchhollow.gl.ScreenTransition
 import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.UIHelpers
+import com.glitchhollow.gl.Camera2D
 
 class WinScreen(
     private val context:  Context,
@@ -25,7 +26,10 @@ class WinScreen(
 
     private val sw = screenW.toFloat()
     private val sh = screenH.toFloat()
-    private val hm = buildHudMatrix(sw, sh)
+
+    private val camera = Camera2D(screenW, screenH)
+    private val hm: FloatArray
+        get() = camera.buildHudMatrix()
     private val tx = ScreenTransition()
     private val save = SaveManager(context)
 

@@ -23,7 +23,9 @@ class PauseScreen(
 
     private val sw = screenW.toFloat()
     private val sh = screenH.toFloat()
-    private val hm = buildHudMatrix(sw, sh)
+
+    private val camera = Camera2D(screenW, screenH)
+    private val hm = camera.buildHudMatrix()
     private val tx = ScreenTransition()
 
     private val panelW  = sw * 0.75f
