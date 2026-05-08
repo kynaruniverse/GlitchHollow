@@ -20,7 +20,10 @@ class Player(startX: Float, startY: Float) {
     var animFrame  = 0
     var animTimer  = 0f   // seconds since last frame advance
 
-    fun update(map: TileMap) {
+    private var _lastDt = 1f / 60f
+
+    fun update(map: TileMap, dt: Float = 1f / 60f) {
+        _lastDt = dt
         applyInput()
         applyGravity()
         moveX(map)
@@ -106,7 +109,7 @@ class Player(startX: Float, startY: Float) {
 
         // Advance frame — speeds vary per animation
         val fps = when (anim) { Anim.RUN -> 10f; Anim.IDLE -> 6f; else -> 8f }
-        animTimer += 1f / 60f
+        animTimer += _lastDt
         if (animTimer >= 1f / fps) {
             animTimer = 0f
             animFrame = (animFrame + 1) % frameCount(anim)
@@ -124,7 +127,15 @@ class Player(startX: Float, startY: Float) {
         anim = Anim.IDLE; animFrame = 0; animTimer = 0f
     }
 
-    fun getRect() = Rect2D(x + 4, y + 4,
-        Constants.PLAYER_WIDTH - 8f,
-        Constants.PLAYER_HEIGHT - 4f)
+    private val _rect = Rect2D(0f, 0f, 0f, 0f)
+
+    fun getRect(): Rect2D {
+        _rect.set(
+            x + 4f,
+            y + 4f,
+            Constants.PLAYER_WIDTH - 8f,
+            Constants.PLAYER_HEIGHT - 4f
+        )
+        return _rect
+    }
 }

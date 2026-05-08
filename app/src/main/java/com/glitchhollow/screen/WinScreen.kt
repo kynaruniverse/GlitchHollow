@@ -28,8 +28,7 @@ class WinScreen(
     private val sh = screenH.toFloat()
 
     private val camera = Camera2D(screenW, screenH)
-    private val hm: FloatArray
-        get() = camera.buildHudMatrix()
+    private val hm: FloatArray = camera.buildHudMatrix()
     private val tx = ScreenTransition()
     private val save = SaveManager(context)
 

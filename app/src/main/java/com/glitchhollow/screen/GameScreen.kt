@@ -23,9 +23,6 @@ import com.glitchhollow.gl.SpriteBatch
 import com.glitchhollow.gl.SpriteAtlas
 import com.glitchhollow.gl.UIHelpers
 import com.glitchhollow.gl.VirtualControls
-import com.glitchhollow.screen.ScreenManager
-import com.glitchhollow.screen.WinScreen
-import com.glitchhollow.screen.PauseScreen
 
 class GameScreen(
     private val context:  Context,
@@ -152,13 +149,8 @@ class GameScreen(
     private fun spawnExitParticles() {
         if (!engine.allShardsCollected()) return
         val ts = Constants.TILE_SIZE.toFloat()
-
-        for (row in 0 until engine.tileMap.rows) {
-            for (col in 0 until engine.tileMap.cols) {
-                if (engine.tileMap.isExit(col, row)) {
-                    particles.exitPulse(col * ts, row * ts)
-                }
-            }
+        engine.exitPositions.forEach { (col, row) ->
+            particles.exitPulse(col * ts, row * ts)
         }
     }
 
@@ -229,6 +221,14 @@ class GameScreen(
         }
 
         transition.draw(batch, assets, screenW.toFloat(), screenH.toFloat(), hudMatrix)
+
+        // SCANLINE PASS — absolute last, on top of everything
+        val glitchFxOn = settings.getBoolean("glitch", true)
+        renderer?.scanlines?.draw(
+            batch, assets,
+            screenW.toFloat(), screenH.toFloat(),
+            hudMatrix, glitchFxOn
+        )
 
         if (renderer != null) {
             debugOverlay.draw(
@@ -393,11 +393,179 @@ class GameScreen(
     // TILE / ENTITIES
     // ─────────────────────────────────────────────────────────────
 
-    // (unchanged logic below for brevity safety)
-    private fun drawTileMap() { /* unchanged */ }
-    private fun drawItems() { /* unchanged */ }
-    private fun drawEnemies() { /* unchanged */ }
-    private fun drawPlayer() { /* unchanged */ }
+    private fun drawTileMap() {
+        val atlas = assets.atlas
+        val sp    = assets.sprites
+        val ts    = Constants.TILE_SIZE.toFloat()
+
+        for (row in 0 until engine.tileMap.rows) {
+            for (col in 0 until engine.tileMap.cols) {
+                val tile = engine.tileMap.getTile(col, row)
+                if (tile == Constants.TILE_AIR) continue
+
+                val wx = col * ts
+                val wy = row * ts
+
+                // Frustum cull — skip tiles not visible to camera
+                if (!camera.isVisible(wx, wy, ts, ts)) continue
+
+                if (atlas != null && sp != null) {
+                    when (tile) {
+                        Constants.TILE_FLOOR -> {
+                            val r = sp.tileFloor
+                            batch.draw(atlas, wx, wy, ts, ts, r.u0, r.v0, r.u1, r.v1)
+                        }
+                        Constants.TILE_WALL -> {
+                            val r = sp.tileWall
+                            batch.draw(atlas, wx, wy, ts, ts, r.u0, r.v0, r.u1, r.v1)
+                        }
+                        Constants.TILE_PLATFORM -> {
+                            val r = sp.tilePlatform
+                            // Platform is a half-height strip — draw centred vertically
+                            val ph = r.h
+                            batch.draw(atlas, wx, wy + (ts - ph) / 2f, ts, ph,
+                                r.u0, r.v0, r.u1, r.v1)
+                        }
+                        Constants.TILE_HAZARD -> {
+                            val r = sp.tileHazard
+                            batch.draw(atlas, wx, wy, ts, ts, r.u0, r.v0, r.u1, r.v1)
+                        }
+                        Constants.TILE_EXIT -> {
+                            val frame = (engine.tick / 10) % sp.tileExit.size
+                            val r = sp.tileExit[frame]
+                            batch.draw(atlas, wx, wy - (r.h - ts), ts, r.h,
+                                r.u0, r.v0, r.u1, r.v1)
+                        }
+                    }
+                } else {
+                    // Fallback — coloured rects when atlas is missing
+                    val c = tileColor(tile)
+                    val fallbackAtlas = assets.atlas ?: continue
+                    batch.draw(fallbackAtlas, wx, wy, ts, ts,
+                        0f, 0f, 0.001f, 0.001f, c[0], c[1], c[2], 1f)
+                }
+            }
+        }
+    }
+
+    private fun drawItems() {
+        val atlas = assets.atlas ?: return
+        val sp    = assets.sprites
+        val ts    = Constants.TILE_SIZE.toFloat()
+
+        // Shards
+        engine.shardX.indices.forEach { i ->
+            if (engine.shardCollected[i]) return@forEach
+            val sx = engine.shardX[i]
+            val sy = engine.shardY[i]
+            if (!camera.isVisible(sx, sy, 32f, 40f)) return@forEach
+
+            val bob = Math.sin(engine.tick * 0.08 + i).toFloat() * 4f
+            if (sp != null) {
+                val frame = (engine.tick / 8 + i) % sp.shardSpin.size
+                val r = sp.shardSpin[frame]
+                batch.draw(atlas, sx, sy + bob, r.w, r.h, r.u0, r.v0, r.u1, r.v1,
+                    0f, 0.96f, 1f, 1f)
+            } else {
+                batch.draw(atlas, sx, sy + bob, 32f, 40f,
+                    0f, 0f, 0.001f, 0.001f, 0f, 0.96f, 1f, 1f)
+            }
+        }
+
+        // Coins
+        engine.coinX.indices.forEach { i ->
+            if (engine.coinCollected[i]) return@forEach
+            val cx = engine.coinX[i]
+            val cy = engine.coinY[i]
+            if (!camera.isVisible(cx, cy, 28f, 28f)) return@forEach
+
+            val bob = Math.sin(engine.tick * 0.1 + i * 1.5).toFloat() * 3f
+            if (sp != null) {
+                val frame = (engine.tick / 8 + i) % sp.coinSpin.size
+                val r = sp.coinSpin[frame]
+                batch.draw(atlas, cx, cy + bob, r.w, r.h, r.u0, r.v0, r.u1, r.v1,
+                    1f, 0.9f, 0f, 1f)
+            } else {
+                batch.draw(atlas, cx, cy + bob, 28f, 28f,
+                    0f, 0f, 0.001f, 0.001f, 1f, 0.9f, 0f, 1f)
+            }
+        }
+    }
+
+    private fun drawEnemies() {
+        val atlas = assets.atlas ?: return
+        val sp    = assets.sprites
+
+        engine.enemies.forEach { e ->
+            if (!camera.isVisible(e.x, e.y, e.width, e.height)) return@forEach
+
+            if (sp != null) {
+                val reg = when (e.type) {
+                    Constants.ENEMY_WOBBLE -> {
+                        if (e.dead) sp.wobbleDead[e.animFrame.coerceAtMost(sp.wobbleDead.size - 1)]
+                        else        sp.wobblePatrol[e.animFrame % sp.wobblePatrol.size]
+                    }
+                    Constants.ENEMY_STITCHY -> {
+                        if (e.dead) sp.stitchyDead[e.animFrame.coerceAtMost(sp.stitchyDead.size - 1)]
+                        else        sp.stitchyPatrol[e.animFrame % sp.stitchyPatrol.size]
+                    }
+                    Constants.ENEMY_GLITCH -> {
+                        if (e.dead) sp.glitchDead[e.animFrame.coerceAtMost(sp.glitchDead.size - 1)]
+                        else        sp.glitchPatrol[e.animFrame % sp.glitchPatrol.size]
+                    }
+                    Constants.ENEMY_DIRECTOR -> {
+                        if (e.dead) sp.directorDead[e.animFrame.coerceAtMost(sp.directorDead.size - 1)]
+                        else        sp.directorPatrol[e.animFrame % sp.directorPatrol.size]
+                    }
+                    else -> sp.wobblePatrol[0]
+                }
+                batch.draw(atlas, e.x, e.y, e.width, e.height,
+                    reg.u0, reg.v0, reg.u1, reg.v1,
+                    flipX = !e.movingLeft)
+            } else {
+                // Fallback — coloured rect per enemy type
+                val (r, g, b) = when (e.type) {
+                    Constants.ENEMY_WOBBLE   -> Triple(0.78f, 0.24f, 0.24f)
+                    Constants.ENEMY_STITCHY  -> Triple(0.78f, 0.47f, 0.24f)
+                    Constants.ENEMY_GLITCH   -> Triple(0.24f, 0.78f, 0.71f)
+                    Constants.ENEMY_DIRECTOR -> Triple(0.78f, 0.71f, 0.24f)
+                    else                     -> Triple(0.78f, 0.24f, 0.24f)
+                }
+                val alpha = if (e.dead) 0.3f else 1f
+                batch.draw(atlas, e.x, e.y, e.width, e.height,
+                    0f, 0f, 0.001f, 0.001f, r, g, b, alpha)
+            }
+        }
+    }
+
+    private fun drawPlayer() {
+        val atlas = assets.atlas ?: return
+        val sp    = assets.sprites
+        val p     = engine.player
+
+        // Invincibility flicker — skip every other 4-frame block
+        if (p.invincible > 0 && (p.invincible / 4) % 2 == 0) return
+
+        if (sp != null) {
+            val frames = when (p.anim) {
+                Player.Anim.IDLE -> sp.pipIdle
+                Player.Anim.RUN  -> sp.pipRun
+                Player.Anim.JUMP -> sp.pipJump
+                Player.Anim.DEAD -> sp.pipDead
+            }
+            val reg = frames[p.animFrame.coerceAtMost(frames.size - 1)]
+            batch.draw(atlas, p.x, p.y,
+                Constants.PLAYER_WIDTH.toFloat(), Constants.PLAYER_HEIGHT.toFloat(),
+                reg.u0, reg.v0, reg.u1, reg.v1,
+                flipX = p.facingLeft)
+        } else {
+            // Fallback — magenta rect
+            val alpha = if (p.invincible > 0 && (p.invincible / 4) % 2 == 0) 0f else 1f
+            batch.draw(atlas, p.x, p.y,
+                Constants.PLAYER_WIDTH.toFloat(), Constants.PLAYER_HEIGHT.toFloat(),
+                0f, 0f, 0.001f, 0.001f, 0.48f, 0.18f, 0.75f, alpha)
+        }
+    }
 
     private fun tileColor(tile: Int) = when (tile) {
         Constants.TILE_FLOOR -> floatArrayOf(0.118f, 0f, 0.208f)

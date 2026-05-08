@@ -30,8 +30,11 @@ class Enemy(
         width = size.first; height = size.second
     }
 
-    fun update(map: TileMap) {
+    private var _lastDt = 1f / 60f
+
+    fun update(map: TileMap, dt: Float = 1f / 60f) {
         if (dead) return
+        _lastDt = dt
 
         x += velX
 
@@ -41,13 +44,18 @@ class Enemy(
             movingLeft = velX < 0
         }
 
-        // Advance animation at 8 fps
-        animTimer += 1f / 60f
+        // // Advance animation at 8 fps
+        animTimer += _lastDt
         if (animTimer >= 1f / 8f) {
             animTimer  = 0f
             animFrame  = (animFrame + 1) % 4
         }
     }
 
-    fun getRect() = Rect2D(x + 4, y + 4, width - 8f, height - 8f)
+    private val _rect = Rect2D(0f, 0f, 0f, 0f)
+
+    fun getRect(): Rect2D {
+        _rect.set(x + 4f, y + 4f, width - 8f, height - 8f)
+        return _rect
+    }
 }

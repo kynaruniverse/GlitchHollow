@@ -74,6 +74,10 @@ class LevelLoader(private val context: Context) {
             }
         }
 
-        return LevelData(name, rows, cols, tiles, startX, startY, shards, coins, enemies)
+        // Clamp player start to valid tile range — prevents spawn-outside-map crash
+        val safeStartX = startX.coerceIn(0, cols - 1)
+        val safeStartY = startY.coerceIn(0, rows - 1)
+
+        return LevelData(name, rows, cols, tiles, safeStartX, safeStartY, shards, coins, enemies)
     }
 }

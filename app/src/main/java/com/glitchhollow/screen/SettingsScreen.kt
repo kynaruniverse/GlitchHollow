@@ -52,9 +52,18 @@ class SettingsScreen(
     private val toggleW = rowH
     private val toggleX = rowX + rowW - toggleW
 
+    // Two-tap confirmation for reset — armed by first tap, confirmed within 2 seconds
+    private var resetArmed    = false
+    private var resetArmedMs  = 0L
+    private val RESET_WINDOW_MS = 2000L
+
     override fun update(dt: Float) {
         bg.update(dt)
         tx.update(dt)
+        // Expire the reset confirmation arm after the window
+        if (resetArmed && System.currentTimeMillis() - resetArmedMs > RESET_WINDOW_MS) {
+            resetArmed = false
+        }
     }
 
     override fun render() {
@@ -74,7 +83,9 @@ class SettingsScreen(
         drawToggleRow(batch, atlas, font, row2Y, "SFX",      sfxOn)
         drawToggleRow(batch, atlas, font, row3Y, "GLITCH FX", glitchOn)
 
-        UIHelpers.button(batch, atlas, font, rowX, row4Y, rowW, rowH, "RESET SAVE")
+        val resetLabel = if (resetArmed) "TAP AGAIN TO CONFIRM" else "RESET SAVE"
+        val resetActive = !resetArmed
+        UIHelpers.button(batch, atlas, font, rowX, row4Y, rowW, rowH, resetLabel, resetActive)
         UIHelpers.button(batch, atlas, font, rowX, backY,  rowW, 60f,  "BACK")
 
         batch.end()
@@ -117,8 +128,21 @@ class SettingsScreen(
                 audio.play(SoundEvent.MENU_SELECT)
             }
             UIHelpers.hits(x, y, rowX, row4Y, rowW, rowH) -> {
-                SaveManager(context).resetAll()
-                audio.play(SoundEvent.MENU_SELECT)
+                val now = System.currentTimeMillis()
+                if (!resetArmed) {
+                    resetArmed   = true
+                    resetArmedMs = now
+                    audio.play(SoundEvent.MENU_SELECT)
+                } else if (now - resetArmedMs <= RESET_WINDOW_MS) {
+                    SaveManager(context).resetAll()
+                    resetArmed = false
+                    audio.play(SoundEvent.MENU_SELECT)
+                } else {
+                    // Window expired — re-arm
+                    resetArmed   = true
+                    resetArmedMs = now
+                    audio.play(SoundEvent.MENU_SELECT)
+                }
             }
             UIHelpers.hits(x, y, rowX, backY, rowW, 60f) -> {
                 audio.play(SoundEvent.MENU_BACK)

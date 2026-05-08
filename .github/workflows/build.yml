@@ -41,14 +41,31 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      # ── Build APK ─────────────────────────────
+      # ── Build APK ─────────────────────────────────────────────────────
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
 
-      # ── Upload APK ─────────────────────────────
-      - name: Upload APK
+      - name: Build Release APK (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          KEYSTORE_PATH:     ${{ secrets.KEYSTORE_PATH }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS:         ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD:      ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew assembleRelease --stacktrace
+
+      # ── Upload APKs ───────────────────────────────────────────────────
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: glitch-hollow-debug
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 14
+
+      - name: Upload Release APK (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
+        with:
+          name: glitch-hollow-release
+          path: app/build/outputs/apk/release/*.apk
+          retention-days: 90

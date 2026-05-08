@@ -1,6 +1,5 @@
 package com.glitchhollow.gl
 
-import android.content.Context
 import com.glitchhollow.core.Constants
 
 /**
@@ -20,7 +19,7 @@ import com.glitchhollow.core.Constants
  * Both effects are toggleable via Settings (gh_settings prefs).
  * Intensity tuned via Constants.SCANLINE_ALPHA and VIGNETTE_ALPHA.
  */
-class ScanlineRenderer(context: Context) {
+class ScanlineRenderer {
 
     fun draw(batch: SpriteBatch, assets: AssetManager,
              screenW: Float, screenH: Float, hudMatrix: FloatArray,

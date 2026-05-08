@@ -134,8 +134,8 @@ class AudioManager(private val context: Context) {
                 afd.close()
                 isLooping = true
                 setVolume(bgmVolume, bgmVolume)
-                prepare()
-                start()
+                setOnPreparedListener { it.start() }
+                prepareAsync()
             }
         } catch (e: Exception) {
             Log.d("AudioManager", "BGM not found (skipped): $trackName.ogg")

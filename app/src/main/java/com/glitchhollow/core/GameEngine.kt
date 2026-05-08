@@ -30,6 +30,9 @@ class GameEngine(context: Context, val world: Int, val level: Int) {
     private val loader = LevelLoader(context)
     private val collisionCache = Rect2D(0f, 0f, 0f, 0f)
 
+    // Cached exit tile positions — built at load time, avoids full-map scan every frame
+    val exitPositions: MutableList<Pair<Int, Int>> = mutableListOf()
+
     // Player state tracking for sound triggers
     private var wasOnGround = false
 
@@ -67,6 +70,12 @@ class GameEngine(context: Context, val world: Int, val level: Int) {
                 ed.startRow * Constants.TILE_SIZE.toFloat(),
                 ed.patrolCols * Constants.TILE_SIZE.toFloat())
         })
+
+        // Cache exit tile positions so GameScreen never scans the full map
+        exitPositions.clear()
+        for (row in 0 until tileMap.rows)
+            for (col in 0 until tileMap.cols)
+                if (tileMap.isExit(col, row)) exitPositions.add(col to row)
 
         resetState()
     }
