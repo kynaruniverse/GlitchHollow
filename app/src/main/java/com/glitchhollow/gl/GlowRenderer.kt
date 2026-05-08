@@ -48,13 +48,21 @@ class GlowRenderer(context: Context) {
     /**
      * Draw a glow halo around a world-space sprite.
      *
-     * @param texture   the same texture as the sprite
-     * @param x, y      sprite's top-left world position
-     * @param w, h      sprite's size in pixels
-     * @param intensity 0–1 glow brightness (from Constants.GLOW_*)
-     * @param r, g, b   glow colour (usually matches sprite's dominant colour)
-     * @param u0..v1    UV coords of the sprite region
+     * @param texture same texture as the sprite
+     * @param x sprite top-left x position
+     * @param y sprite top-left y position
+     * @param w sprite width in pixels
+     * @param h sprite height in pixels
+     * @param intensity glow brightness
+     * @param r red glow component
+     * @param g green glow component
+     * @param b blue glow component
+     * @param u0 left UV
+     * @param v0 top UV
+     * @param u1 right UV
+     * @param v1 bottom UV
      */
+ 
     fun drawGlow(texture: Texture,
                  x: Float, y: Float, w: Float, h: Float,
                  intensity: Float,
